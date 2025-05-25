@@ -70,6 +70,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = [
     'notpointless.ft1.us',
     '.amazonaws.com',
+    ".awsapprunner.com",
     'localhost',
     '127.0.0.1',
     os.getenv("ALLOWED_HOST", "*")
