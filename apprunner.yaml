@@ -20,8 +20,8 @@ run:
       value: "notpointless.ft1.us"
     - name: AWS_DEFAULT_REGION
       value: "us-east-1"
-    # Note: SECRET_KEY and other sensitive values should be configured
-    # directly in AWS App Runner console, not in this file
+    # Note: SECRET_KEY is automatically handled by the application using AWS Secrets Manager
+    # Other sensitive values should not be included in this file
   health-check:
     path: /health/
     interval: 10

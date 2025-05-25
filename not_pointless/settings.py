@@ -20,9 +20,8 @@ from dotenv import load_dotenv
 if os.getenv('ENVIRONMENT') != 'production':
     load_dotenv()
 
-def get_secret():
+def get_secret(secret_name):
     """Get secret from AWS Secrets Manager"""
-    secret_name = "NotPointlessPostgresqlPassword"
     region_name = "us-east-1"
 
     # Create a Secrets Manager client
@@ -43,6 +42,16 @@ def get_secret():
     secret = get_secret_value_response['SecretString']
     return json.loads(secret)
 
+def get_django_secret_key():
+    """Get Django secret key from AWS Secrets Manager or environment variable"""
+    if os.getenv('ENVIRONMENT') == 'production':
+        django_secrets = get_secret("notpointless-django-secret")
+        if django_secrets and 'SECRET_KEY' in django_secrets:
+            return django_secrets['SECRET_KEY']
+    
+    # Fallback to environment variable
+    return os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -52,7 +61,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-53q+)n(fti3@35hxb3dstzqpw94&x_tp899f-ig9%d$#ldktzk'
-SECRET_KEY = os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
+SECRET_KEY = get_django_secret_key()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -114,7 +123,7 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 
 # Get database credentials from AWS Secrets Manager in production
 if os.getenv('ENVIRONMENT') == 'production':
-    db_secrets = get_secret()
+    db_secrets = get_secret("NotPointlessPostgresqlPassword")
     if db_secrets:
         DATABASES = {
             'default': {

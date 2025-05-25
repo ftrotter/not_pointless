@@ -13,7 +13,7 @@ Use this checklist to ensure all steps are completed for a successful deployment
 - [ ] Health check endpoint is implemented and accessible
 
 ### 2. AWS Secrets Manager Setup
-- [ ] Database credentials secret created: `notpointless-db-credentials`
+- [ ] Database credentials secret verified: `NotPointlessPostgresqlPassword` (already exists)
 - [ ] Django secret key created: `notpointless-django-secret`
 - [ ] IAM permissions configured for App Runner to access secrets
 - [ ] Secret ARNs documented for reference
@@ -75,7 +75,7 @@ Use this checklist to ensure all steps are completed for a successful deployment
 ### 1. Secrets Management
 - [ ] No secrets in version control (apprunner.yaml, code, or documentation)
 - [ ] No secrets in environment variables (using Secrets Manager instead)
-- [ ] SECRET_KEY configured in AWS App Runner console, not in apprunner.yaml
+- [ ] SECRET_KEY properly configured in AWS Secrets Manager for production
 - [ ] IAM permissions follow least privilege principle
 - [ ] Database credentials properly secured in AWS Secrets Manager
 

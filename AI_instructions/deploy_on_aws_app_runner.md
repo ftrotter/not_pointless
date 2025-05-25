@@ -18,4 +18,9 @@ https://notpointless.ft1.us/
 
 Please instruct as needed how to configure this. Assume that I understand how to point a domain name at a given IP address.
 
-If the structure of the project needs to change, or more resources added to the project to facilitate deployment via push-from-github to AWS App Runner, lets make those changes now
+If the structure of the project needs to change, or more resources added to the project to facilitate deployment via push-from-github to AWS App Runner, lets make those changes now.
+
+Note that there is an existing secret in AWS Secret Manager called 'NotPointlessPostgresqlPassword' that is already correctly hard-coded in settings.py
+
+Please ensure that the code, and the contents of AppRunnerSetup.md make sense and are compatible.
+

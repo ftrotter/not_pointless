@@ -25,51 +25,25 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
 
 ## Step 2: Set Up AWS Secrets Manager
 
-### Create Database Credentials Secret
 
-1. **Navigate to AWS Secrets Manager**
-   - Go to AWS Console → Services → Secrets Manager
-   - Click "Store a new secret"
-
-2. **Configure Secret Type**
-   - Select "Other type of secret"
-   - Choose "Plaintext" tab
-   - Enter the following JSON structure:
-   ```json
-   {
-     "username": "postgres",
-     "password": "YOUR_ACTUAL_DATABASE_PASSWORD_HERE",
-     "host": "your-rds-endpoint.region.rds.amazonaws.com",
-     "port": "5432",
-     "dbname": "postgres"
-   }
-   ```
-   **Important**: Replace the placeholder values with your actual database credentials.
-
-3. **Name the Secret**
-   - Secret name: `notpointless-db-credentials`
-   - Description: "Database credentials for Not Pointless application"
-   - Click "Next"
-
-4. **Configure Rotation (Optional)**
-   - For production, consider enabling automatic rotation
-   - For initial setup, you can skip this step
-   - Click "Next"
-
-5. **Review and Create**
-   - Review the configuration
-   - Click "Store"
-   - Note the Secret ARN for later use
 
 ### Create Application Secrets
 
-1. **Create Django Secret Key**
-   - Create another secret named: `notpointless-django-secret`
+1. **Verify Existing Database Secret**
+   - The PostgreSQL password secret already exists: `NotPointlessPostgresqlPassword`
+   - This secret contains the database credentials and is correctly configured in the application
+
+2. **Create Django Secret Key**
+   - Create secret named: `notpointless-django-secret`
    - Use plaintext format:
    ```json
    {
      "SECRET_KEY": "your-super-secure-django-secret-key-here-make-it-long-and-random"
    }
+   ```
+   - Generate a secure secret key using the provided script:
+   ```bash
+   python scripts/make_secret_key.py
    ```
 
 ## Step 3: Configure GitHub Repository
@@ -131,13 +105,8 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
      ENVIRONMENT = production
      DEBUG = False
      ALLOWED_HOST = notpointless.ft1.us
-     SECRET_KEY = [Generate a secure Django secret key - do not use the default]
      ```
-     **Security Note**: The SECRET_KEY should be a long, random string. Generate one using:
-     ```python
-     from django.core.management.utils import get_random_secret_key
-     print(get_random_secret_key())
-     ```
+     **Note**: The SECRET_KEY is automatically handled by the application using AWS Secrets Manager in production and .env file in development.
 
 5. **Configure Auto Scaling**
    - **Auto scaling**: Enabled
@@ -174,7 +143,7 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
            "secretsmanager:GetSecretValue"
          ],
          "Resource": [
-           "arn:aws:secretsmanager:us-east-1:YOUR-ACCOUNT-ID:secret:notpointless-db-credentials-*",
+           "arn:aws:secretsmanager:us-east-1:YOUR-ACCOUNT-ID:secret:NotPointlessPostgresqlPassword-*",
            "arn:aws:secretsmanager:us-east-1:YOUR-ACCOUNT-ID:secret:notpointless-django-secret-*"
          ]
        }
