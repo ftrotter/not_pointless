@@ -84,7 +84,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'not_pointless',
+    'not_pointless.apps.NotPointlessConfig',
 ]
 
 MIDDLEWARE = [
