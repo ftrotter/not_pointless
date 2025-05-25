@@ -32,25 +32,31 @@ def get_secret(secret_name):
     )
 
     try:
+        print(f"Attempting to retrieve secret: {secret_name}")
         get_secret_value_response = client.get_secret_value(
             SecretId=secret_name
         )
+        secret = get_secret_value_response['SecretString']
+        parsed_secret = json.loads(secret)
+        print(f"Successfully retrieved secret {secret_name} - first 5 chars of JSON: {secret[:5]}...")
+        return parsed_secret
     except Exception as e:
         print(f"Error retrieving secret {secret_name}: {e}")
         return None
-
-    secret = get_secret_value_response['SecretString']
-    return json.loads(secret)
 
 def get_django_secret_key():
     """Get Django secret key from AWS Secrets Manager or environment variable"""
     if os.getenv('ENVIRONMENT') == 'production':
         django_secrets = get_secret("notpointless-django-secret")
         if django_secrets and 'SECRET_KEY' in django_secrets:
-            return django_secrets['SECRET_KEY']
+            secret_key = django_secrets['SECRET_KEY']
+            print(f"Django SECRET_KEY retrieved from AWS Secrets Manager - first 5 chars: {secret_key[:5]}...")
+            return secret_key
     
     # Fallback to environment variable
-    return os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
+    fallback_key = os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
+    print(f"Django SECRET_KEY using fallback - first 5 chars: {fallback_key[:5]}...")
+    return fallback_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,24 +132,28 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 if os.getenv('ENVIRONMENT') == 'production':
     db_secrets = get_secret("NotPointlessPostgresqlPassword")
     if db_secrets:
+        db_password = db_secrets.get('password', '')
+        print(f"Database password retrieved from AWS Secrets Manager - first 5 chars: {db_password[:5]}...")
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
                 'NAME': db_secrets.get('dbname', 'postgres'),
                 'USER': db_secrets.get('username', 'postgres'),
-                'PASSWORD': db_secrets.get('password', ''),
+                'PASSWORD': db_password,
                 'HOST': db_secrets.get('host', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
                 'PORT': db_secrets.get('port', '5432'),
             }
         }
     else:
         # Fallback to environment variables
+        fallback_password = os.getenv('DB_PASSWORD', '')
+        print(f"Database password using fallback - first 5 chars: {fallback_password[:5]}...")
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
                 'NAME': os.getenv('DB_NAME', 'postgres'),
                 'USER': os.getenv('DB_USER', 'postgres'),
-                'PASSWORD': os.getenv('DB_PASSWORD', ''),
+                'PASSWORD': fallback_password,
                 'HOST': os.getenv('DB_HOST', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
                 'PORT': os.getenv('DB_PORT', '5432'),
             }
