@@ -3,15 +3,16 @@ runtime: python3
 build:
   commands:
     build:
-      - echo "Build started on `date`"
+      - echo "Build started on `date`"    
+      - pip install pipenv
+      - pipenv install
       - echo "Installing Python dependencies..."
-      - pip install --upgrade pip
       - pip install -r requirements.txt
-      - echo "Making startup script executable..."
-      - chmod +x scripts/startup.sh
-      - echo "Build completed successfully"
+      - echo "Collecting static files..."
+      - pipenv run python manage.py collectstatic --noinput
+
 run:  
-  command: ./scripts/startup.sh gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
+  command: pipenv run gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
   network:
     port: 8000
     env: PORT
