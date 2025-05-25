@@ -10,8 +10,7 @@ build:
       - echo "Making startup script executable..."
       - chmod +x scripts/startup.sh
       - echo "Build completed successfully"
-run:
-  runtime-version: 3.11.12
+run:  
   command: ./scripts/startup.sh gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
   network:
     port: 8000
