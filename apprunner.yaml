@@ -11,7 +11,7 @@ build:
       - chmod +x scripts/startup.sh
       - echo "Build completed successfully"
 run:
-  runtime-version: 3.11
+  runtime-version: 3.11.12
   command: ./scripts/startup.sh gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
   network:
     port: 8000
