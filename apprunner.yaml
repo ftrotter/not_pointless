@@ -1,0 +1,30 @@
+version: 1.0
+runtime: docker
+build:
+  commands:
+    build:
+      - echo "Build started on `date`"
+      - echo "Building the Docker image..."
+run:
+  runtime-version: latest
+  command: gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
+  network:
+    port: 8000
+    env: PORT
+  env:
+    - name: ENVIRONMENT
+      value: production
+    - name: DEBUG
+      value: "False"
+    - name: ALLOWED_HOST
+      value: "notpointless.ft1.us"
+    - name: AWS_DEFAULT_REGION
+      value: "us-east-1"
+    # Note: SECRET_KEY and other sensitive values should be configured
+    # directly in AWS App Runner console, not in this file
+  health-check:
+    path: /health/
+    interval: 10
+    timeout: 5
+    healthy-threshold: 3
+    unhealthy-threshold: 3

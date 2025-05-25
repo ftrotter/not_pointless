@@ -10,11 +10,30 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
+import json
+import boto3
 import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
-load_dotenv()
 
+# Load .env file only in development
+if os.getenv('ENVIRONMENT') != 'production':
+    load_dotenv()
+
+def get_secret(secret_name, region_name="us-east-1"):
+    """Get secret from AWS Secrets Manager"""
+    try:
+        session = boto3.session.Session()
+        client = session.client(
+            service_name='secretsmanager',
+            region_name=region_name
+        )
+        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
+        secret = get_secret_value_response['SecretString']
+        return json.loads(secret)
+    except Exception as e:
+        print(f"Error retrieving secret {secret_name}: {e}")
+        return None
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,11 +47,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = os.getenv("DEBUG", "True") == "True"
+DEBUG = os.getenv("DEBUG", "False") == "True"
 
-#ALLOWED_HOSTS = []
-ALLOWED_HOSTS = [os.getenv("ALLOWED_HOST", "*")]
+# Production settings
+ALLOWED_HOSTS = [
+    'notpointless.ft1.us',
+    '.amazonaws.com',
+    'localhost',
+    '127.0.0.1',
+    os.getenv("ALLOWED_HOST", "*")
+]
 
 # Application definition
 
@@ -48,6 +72,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -79,16 +104,44 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': os.getenv('DB_PASSWORD', ''),  # put password in .env or App Runner env var
-        'HOST': 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+# Get database credentials from AWS Secrets Manager in production
+if os.getenv('ENVIRONMENT') == 'production':
+    db_secrets = get_secret('notpointless-db-credentials')
+    if db_secrets:
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': db_secrets.get('dbname', 'postgres'),
+                'USER': db_secrets.get('username', 'postgres'),
+                'PASSWORD': db_secrets.get('password', ''),
+                'HOST': db_secrets.get('host', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
+                'PORT': db_secrets.get('port', '5432'),
+            }
+        }
+    else:
+        # Fallback to environment variables
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': os.getenv('DB_NAME', 'postgres'),
+                'USER': os.getenv('DB_USER', 'postgres'),
+                'PASSWORD': os.getenv('DB_PASSWORD', ''),
+                'HOST': os.getenv('DB_HOST', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
+                'PORT': os.getenv('DB_PORT', '5432'),
+            }
+        }
+else:
+    # Development database configuration
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres',
+            'PASSWORD': os.getenv('DB_PASSWORD', ''),
+            'HOST': 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com',
+            'PORT': '5432',
+        }
     }
-}
 
 
 
@@ -126,7 +179,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# WhiteNoise configuration
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
