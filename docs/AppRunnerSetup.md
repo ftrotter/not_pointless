@@ -46,34 +46,7 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
    python scripts/make_secret_key.py
    ```
 
-## Step 3: Configure GitHub Repository
-
-1. **Ensure Repository Structure**
-   Your repository should contain:
-   ```
-   ├── Dockerfile
-   ├── apprunner.yaml
-   ├── requirements.txt
-   ├── manage.py
-   ├── not_pointless/
-   │   ├── settings.py
-   │   └── ...
-   └── docs/
-       └── AppRunnerSetup.md
-   ```
-
-2. **Verify Dockerfile**
-   - Ensure the Dockerfile is properly configured for production
-   - Check that all dependencies are included in requirements.txt
-
-3. **Push Changes to GitHub**
-   ```bash
-   git add .
-   git commit -m "Add AWS App Runner deployment configuration"
-   git push origin main
-   ```
-
-## Step 4: Create AWS App Runner Service
+## Step 3: Create AWS App Runner Service
 
 ### Initial Service Creation
 
