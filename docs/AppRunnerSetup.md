@@ -73,13 +73,8 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
    - **Service name**: `notpointless-app`
    - **Virtual CPU**: 1 vCPU (can be adjusted based on needs)
    - **Memory**: 2 GB (can be adjusted based on needs)
-   - **Environment variables**: Add the following:
-     ```
-     ENVIRONMENT = production
-     DEBUG = False
-     ALLOWED_HOST = notpointless.ft1.us
-     ```
-     **Note**: The SECRET_KEY is automatically handled by the application using AWS Secrets Manager in production and .env file in development.
+   
+   **Note**: Environment variables are automatically configured via the `apprunner.yaml` file in your repository. No manual environment variable configuration is needed during service creation.
 
 5. **Configure Auto Scaling**
    - **Auto scaling**: Enabled
@@ -170,28 +165,7 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
      TTL: 300 (or your preferred value)
      ```
 
-## Step 6: Environment Variables and Secrets Integration
-
-### Update App Runner Environment Variables
-
-1. **Navigate to Service Configuration**
-   - Go to your App Runner service
-   - Click "Configuration" tab
-   - Click "Edit" in the Environment variables section
-
-2. **Add Environment Variables**
-   ```
-   ENVIRONMENT = production
-   DEBUG = False
-   ALLOWED_HOST = notpointless.ft1.us
-   AWS_DEFAULT_REGION = us-east-1
-   ```
-
-3. **Secret References** (if supported)
-   - Some environment variables can reference Secrets Manager
-   - Format: `{{resolve:secretsmanager:secret-name:SecretString:key}}`
-
-## Step 7: Database Migration and Initial Setup
+## Step 6: Database Migration and Initial Setup
 
 ### Run Database Migrations
 
@@ -208,7 +182,7 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
    - You may need to create a Django superuser
    - This can be done through a management command or Django shell
 
-## Step 8: Testing and Verification
+## Step 7: Testing and Verification
 
 ### Verify Deployment
 
@@ -226,7 +200,7 @@ This guide provides step-by-step instructions for deploying the Not Pointless Dj
    - Use App Runner metrics to monitor performance
    - Set up CloudWatch alarms if needed
 
-## Step 9: Ongoing Maintenance
+## Step 8: Ongoing Maintenance
 
 ### Automatic Deployments
 
