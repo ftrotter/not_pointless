@@ -20,20 +20,28 @@ from dotenv import load_dotenv
 if os.getenv('ENVIRONMENT') != 'production':
     load_dotenv()
 
-def get_secret(secret_name, region_name="us-east-1"):
+def get_secret():
     """Get secret from AWS Secrets Manager"""
+    secret_name = "NotPointlessPostgresqlPassword"
+    region_name = "us-east-1"
+
+    # Create a Secrets Manager client
+    session = boto3.session.Session()
+    client = session.client(
+        service_name='secretsmanager',
+        region_name=region_name
+    )
+
     try:
-        session = boto3.session.Session()
-        client = session.client(
-            service_name='secretsmanager',
-            region_name=region_name
+        get_secret_value_response = client.get_secret_value(
+            SecretId=secret_name
         )
-        get_secret_value_response = client.get_secret_value(SecretId=secret_name)
-        secret = get_secret_value_response['SecretString']
-        return json.loads(secret)
     except Exception as e:
         print(f"Error retrieving secret {secret_name}: {e}")
         return None
+
+    secret = get_secret_value_response['SecretString']
+    return json.loads(secret)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -106,7 +114,7 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 
 # Get database credentials from AWS Secrets Manager in production
 if os.getenv('ENVIRONMENT') == 'production':
-    db_secrets = get_secret('notpointless-db-credentials')
+    db_secrets = get_secret()
     if db_secrets:
         DATABASES = {
             'default': {
