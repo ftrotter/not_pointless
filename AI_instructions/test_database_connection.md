@@ -1,7 +1,12 @@
 Test DB connection
 ==================
 
-I have started a Django app, but I need to verify that I can talk to the database. 
+I have started a Django app, but I need to verify that I can talk to the database.
+I have included the password to the dataase in the .env file and I believe I have otherwise correctly configured
+not_pointless/settings.py
+in order to connect to the AWS hosted postgres instance. I have connected successfully from 
+my local machine DB GUI to this instance and I have added some data. I need to verify that my locally running development
+version of this Django app has access to this same database. 
 
 I have a schema on the database defined as: 
 
@@ -17,6 +22,7 @@ CREATE TABLE endpoint
 
 This table is inside the not_pointless schema in the 'postgres' database. 
 
-Please sort out what I am missing from a standard DJANGO app, including basic ORM files and views, and then help me create an index page that simply lists every DISTINCT endpoint_url on an minimal HTML5 page within an <ul> list. 
+I would like to simply verify that django can connect to this database. 
+Please help me understand how to do this with a command line script for testing purposes. 
 
 

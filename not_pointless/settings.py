@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'not_pointless',
 ]
 
 MIDDLEWARE = [
@@ -81,7 +82,7 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dev-notpointless',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': os.getenv('DB_PASSWORD', ''),  # put password in .env or App Runner env var
         'HOST': 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com',
