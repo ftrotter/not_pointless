@@ -3,23 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Not Pointless - Database Connection Test</title>
+    <title>Not Pointless - Hello World</title>
 </head>
 <body>
-    <h1>Not Pointless - Database Connection Test</h1>
+    <h1>Hello World!</h1>
     
-    <p>Successfully connected to the database!</p>
+    <p>Welcome to the Not Pointless Django application.</p>
     
-    <h2>Distinct URLs ({{ total_count }} found):</h2>
+    <p>This homepage does not connect to the database, so it should load successfully even if there are database connection issues.</p>
     
-    {% if urls %}
-        <ul>
-            {% for url in urls %}
-                <li>{{ url|default:"(empty)" }}</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No URLs found in the database.</p>
-    {% endif %}
+    <h2>Test Database Connection:</h2>
+    <p><a href="{% url 'endpoint_print' %}">Click here to test database connection and view endpoints</a></p>
+    
+    <h2>Other Links:</h2>
+    <ul>
+        <li><a href="{% url 'health_check' %}">Health Check</a></li>
+        <li><a href="/admin/">Admin Panel</a></li>
+    </ul>
 </body>
 </html>

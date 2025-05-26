@@ -22,5 +22,6 @@ from . import health
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
+    path('endpoint_print/', views.endpoint_print, name='endpoint_print'),
     path('health/', health.health_check, name='health_check'),
 ]

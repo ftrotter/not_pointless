@@ -32,16 +32,13 @@ def get_secret(secret_name):
     )
 
     try:
-        print(f"Attempting to retrieve secret: {secret_name}")
         get_secret_value_response = client.get_secret_value(
             SecretId=secret_name
         )
         secret = get_secret_value_response['SecretString']
         parsed_secret = json.loads(secret)
-        print(f"Successfully retrieved secret {secret_name} - first 5 chars of JSON: {secret[:5]}...")
         return parsed_secret
     except Exception as e:
-        print(f"Error retrieving secret {secret_name}: {e}")
         return None
 
 def get_django_secret_key():
@@ -50,12 +47,10 @@ def get_django_secret_key():
         django_secrets = get_secret("notpointless-django-secret")
         if django_secrets and 'SECRET_KEY' in django_secrets:
             secret_key = django_secrets['SECRET_KEY']
-            print(f"Django SECRET_KEY retrieved from AWS Secrets Manager - first 5 chars: {secret_key[:5]}...")
             return secret_key
     
     # Fallback to environment variable
     fallback_key = os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
-    print(f"Django SECRET_KEY using fallback - first 5 chars: {fallback_key[:5]}...")
     return fallback_key
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -133,7 +128,6 @@ if os.getenv('ENVIRONMENT') == 'production':
     db_secrets = get_secret("NotPointlessPostgresqlPassword")
     if db_secrets:
         db_password = db_secrets.get('password', '')
-        print(f"Database password retrieved from AWS Secrets Manager - first 5 chars: {db_password[:5]}...")
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
@@ -147,7 +141,6 @@ if os.getenv('ENVIRONMENT') == 'production':
     else:
         # Fallback to environment variables
         fallback_password = os.getenv('DB_PASSWORD', '')
-        print(f"Database password using fallback - first 5 chars: {fallback_password[:5]}...")
         DATABASES = {
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
