@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.homepage, name='homepage'),
     path('endpoint_print/', views.endpoint_print, name='endpoint_print'),
+    path('debug_secrets/', views.debug_secrets, name='debug_secrets'),
     path('health/', health.health_check, name='health_check'),
 ]

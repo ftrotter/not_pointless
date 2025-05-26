@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Endpoint
+from .settings import get_secret, get_django_secret_key
+import os
 
 def homepage(request):
     """
@@ -26,3 +28,35 @@ def endpoint_print(request):
     except Exception as e:
         # If there's a database connection issue, show the error
         return HttpResponse(f"Database connection error: {str(e)}", status=500)
+
+def debug_secrets(request):
+    """
+    Display the first 5 characters of the two secrets to verify AWS secrets loading
+    """
+    try:
+        # Get Django secret key (first 5 characters)
+        django_secret = get_django_secret_key()
+        django_secret_preview = django_secret[:5] if django_secret else "None"
+        
+        # Get database secret (first 5 characters of password)
+        db_secret_preview = "None"
+        if os.getenv('ENVIRONMENT') == 'production':
+            db_secrets = get_secret("NotPointlessPostgresqlPassword")
+            if db_secrets and 'password' in db_secrets:
+                db_password = db_secrets['password']
+                db_secret_preview = db_password[:5] if db_password else "None"
+        else:
+            # In development, show first 5 chars of DB_PASSWORD env var
+            db_password = os.getenv('DB_PASSWORD', '')
+            db_secret_preview = db_password[:5] if db_password else "None"
+        
+        context = {
+            'django_secret_preview': django_secret_preview,
+            'db_secret_preview': db_secret_preview,
+            'environment': os.getenv('ENVIRONMENT', 'development')
+        }
+        
+        return render(request, 'not_pointless/debug_secrets.html', context)
+    
+    except Exception as e:
+        return HttpResponse(f"Error accessing secrets: {str(e)}", status=500)
