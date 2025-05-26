@@ -36,7 +36,7 @@ def debug_secrets(request):
     try:
         # Get Django secret key (first 5 characters)
         django_secret = get_django_secret_key()
-        django_secret_preview = django_secret[:5] if django_secret else "None"
+        django_secret_preview = django_secret[:5] if django_secret else "Not found"
         
         # Get database secret (first 5 characters of password)
         db_secret_preview = "None"
@@ -44,8 +44,11 @@ def debug_secrets(request):
             db_secrets = get_secret("NotPointlessPostgresqlPassword")
             if db_secrets and 'password' in db_secrets:
                 db_password = db_secrets['password']
-                db_secret_preview = db_password[:5] if db_password else "None"
-        else:
+                db_secret_preview = db_password[:5] if db_password else "Not found"
+            else:
+                db_password = 'failed'
+                db_secret_preview = 'failed'
+        else:   
             # In development, show first 5 chars of DB_PASSWORD env var
             db_password = os.getenv('DB_PASSWORD', '')
             db_secret_preview = db_password[:5] if db_password else "None"
