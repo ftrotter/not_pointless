@@ -60,7 +60,38 @@ def debug_secrets(request):
                 if credentials:
                     credentials_info = f"Access Key ID: {credentials.access_key[:10]}..., Secret Key: {'*' * 20}, Token: {'Present' if credentials.token else 'None'}"
                 else:
-                    credentials_info = "No credentials found in session"
+                    # Check all possible credential sources
+                    credential_sources = []
+                    
+                    # Environment variables
+                    aws_access_key = os.getenv('AWS_ACCESS_KEY_ID')
+                    aws_secret_key = os.getenv('AWS_SECRET_ACCESS_KEY')
+                    aws_session_token = os.getenv('AWS_SESSION_TOKEN')
+                    credential_sources.append(f"ENV AWS_ACCESS_KEY_ID: {'Present' if aws_access_key else 'Missing'}")
+                    credential_sources.append(f"ENV AWS_SECRET_ACCESS_KEY: {'Present' if aws_secret_key else 'Missing'}")
+                    credential_sources.append(f"ENV AWS_SESSION_TOKEN: {'Present' if aws_session_token else 'Missing'}")
+                    
+                    # AWS Profile
+                    aws_profile = os.getenv('AWS_PROFILE')
+                    credential_sources.append(f"ENV AWS_PROFILE: {aws_profile if aws_profile else 'Not set'}")
+                    
+                    # Default region
+                    aws_region = os.getenv('AWS_DEFAULT_REGION')
+                    credential_sources.append(f"ENV AWS_DEFAULT_REGION: {aws_region if aws_region else 'Not set'}")
+                    
+                    # Instance metadata (for EC2/ECS/Lambda)
+                    try:
+                        import requests
+                        # Try to access instance metadata (this will timeout quickly if not on AWS)
+                        metadata_response = requests.get('http://169.254.169.254/latest/meta-data/iam/security-credentials/', timeout=2)
+                        if metadata_response.status_code == 200:
+                            credential_sources.append("Instance Metadata: Available")
+                        else:
+                            credential_sources.append(f"Instance Metadata: HTTP {metadata_response.status_code}")
+                    except:
+                        credential_sources.append("Instance Metadata: Not accessible")
+                    
+                    credentials_info = f"No credentials found. Sources checked: {'; '.join(credential_sources)}"
                     
                 boto3_session_info = f"Region: {session.region_name}, Profile: {session.profile_name}"
                 
