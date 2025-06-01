@@ -2,8 +2,6 @@
 
 A Django web application for managing API endpoints.
 
-
-
 ## Database Connection Testing
 
 To test if the database connection is working:
@@ -17,3 +15,7 @@ This command:
 - Checks access to the `not_pointless.endpoint` table
 - Shows record count and sample data
 - Provides troubleshooting info if connection fails
+
+
+# Checkpoint
+- last error message was: 2025-06-01 17:17:59 [1] [INFO] gunicorn.error - Handling signal: term
