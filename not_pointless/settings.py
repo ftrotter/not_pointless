@@ -21,12 +21,12 @@ from dotenv import load_dotenv
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout)
     ]
 )
-logger = logging.getLogger('not_pointless')
+logger = logging.getLogger()  # Use root logger
 logger.info("Starting application initialization")
 
 # Load .env file only in development

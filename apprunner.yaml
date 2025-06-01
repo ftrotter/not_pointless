@@ -6,7 +6,7 @@ build:
       - pip install -r requirements.txt
       - python manage.py collectstatic --noinput
 run:  
-  command: gunicorn --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - not_pointless.wsgi:application
+  command: gunicorn --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - --log-level info --logger-class gunicorn.glogging.Logger --capture-output not_pointless.wsgi:application
   network:
     port: 8000
     env: PORT
