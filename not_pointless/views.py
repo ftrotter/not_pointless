@@ -1,45 +1,72 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Endpoint
-from .settings import secrets_manager, get_secret
+from .settings import secrets_manager, get_secret, logger
 import os
+import time
 
 def homepage(request):
     """
     Display a simple homepage that doesn't connect to the database
     """
-    return render(request, 'not_pointless/homepage.html')
+    logger.info("Homepage view called")
+    start_time = time.time()
+    
+    # Render the template
+    logger.info("Rendering homepage template")
+    response = render(request, 'not_pointless/homepage.html')
+    
+    # Log completion time
+    elapsed_time = time.time() - start_time
+    logger.info(f"Homepage rendered successfully in {elapsed_time:.3f} seconds")
+    
+    return response
 
 def endpoint_print(request):
     """
     Display distinct URLs from the endpoint table (requires database connection)
     """
+    logger.info("Endpoint print view called (requires database)")
+    start_time = time.time()
+    
     try:
         # Get distinct endpoint URLs from the database
+        logger.info("Attempting to query database for endpoints")
         distinct_urls = Endpoint.objects.values_list('endpoint_url', flat=True).distinct().order_by('endpoint_url')
         
+        logger.info(f"Successfully retrieved {distinct_urls.count()} distinct endpoints")
         context = {
             'urls': distinct_urls,
             'total_count': distinct_urls.count()
         }
         
+        # Log completion time
+        elapsed_time = time.time() - start_time
+        logger.info(f"Endpoint list rendered successfully in {elapsed_time:.3f} seconds")
+        
         return render(request, 'not_pointless/endpoint_list.html', context)
     
     except Exception as e:
         # If there's a database connection issue, show the error
+        logger.error(f"Database connection error: {str(e)}")
         return HttpResponse(f"Database connection error: {str(e)}", status=500)
 
 def debug_secrets(request):
     """
     Display raw debugging information about AWS secrets API responses
     """
+    logger.info("Debug secrets view called")
+    start_time = time.time()
+    
     try:
+        logger.info("Attempting to retrieve SECRET_KEY for debug display")
         # Get Django secret key (first 10 characters)
         django_secret = secrets_manager.get_secret(
             secret_name='SECRET_KEY', 
             default_if_not_found='insecure-dev-key-change-me'
         )
         django_secret_preview = django_secret[:10] if django_secret else "Not found"
+        logger.info("SECRET_KEY retrieved for debug display")
         
         # Initialize debug info
         db_secret_preview = "None"
@@ -51,6 +78,7 @@ def debug_secrets(request):
         credentials_info = "N/A (development mode)"
         
         if os.getenv('ENVIRONMENT') == 'production':
+            logger.info("Running in production mode, attempting to access AWS resources")
             # Import boto3 and json here for debugging
             import boto3
             import json
@@ -170,7 +198,12 @@ def debug_secrets(request):
             'credentials_info': credentials_info,
         }
         
+        # Log completion time
+        elapsed_time = time.time() - start_time
+        logger.info(f"Debug secrets page rendered successfully in {elapsed_time:.3f} seconds")
+        
         return render(request, 'not_pointless/debug_secrets.html', context)
     
     except Exception as e:
+        logger.error(f"Error accessing secrets: {str(e)}")
         return HttpResponse(f"Error accessing secrets: {str(e)}", status=500)

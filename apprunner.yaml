@@ -6,7 +6,7 @@ build:
       - pip install -r requirements.txt
       - python manage.py collectstatic --noinput
 run:  
-  command: gunicorn --bind 0.0.0.0:8000 not_pointless.wsgi:application
+  command: gunicorn --bind 0.0.0.0:8000 --timeout 120 --access-logfile - --error-logfile - not_pointless.wsgi:application
   network:
     port: 8000
     env: PORT
@@ -19,5 +19,9 @@ run:
       value: "notpointless.ft1.us"
     - name: AWS_DEFAULT_REGION
       value: "us-east-1"
+    - name: PYTHONUNBUFFERED
+      value: "1"
+    - name: LOG_LEVEL
+      value: "INFO"
     # Note: SECRET_KEY is automatically handled by the application using AWS Secrets Manager
     # Other sensitive values should not be included in this file

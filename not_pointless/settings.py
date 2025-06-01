@@ -13,12 +13,28 @@ import os
 import json
 import boto3
 import dj_database_url
+import logging
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s [%(levelname)s] %(message)s',
+    handlers=[
+        logging.StreamHandler(sys.stdout)
+    ]
+)
+logger = logging.getLogger('not_pointless')
+logger.info("Starting application initialization")
+
 # Load .env file only in development
 if os.getenv('ENVIRONMENT') != 'production':
+    logger.info("Loading .env file (development mode)")
     load_dotenv()
+else:
+    logger.info("Running in production mode, skipping .env file")
 
 class mySecrets:
     """
@@ -27,6 +43,7 @@ class mySecrets:
     def __init__(self):
         self.cache = {}
         self.region_name = "us-east-1"
+        logger.info("Initializing secrets manager with region: %s", self.region_name)
     
     def get_secret(self, *, secret_name, default_if_not_found=None, secret_sub_key=None):
         """
@@ -40,53 +57,70 @@ class mySecrets:
         - default_if_not_found: Value to return if secret is not found (default=None)
         - secret_sub_key (str): If the secret is a dictionary, get this specific key (default=None)
         """
+        logger.info("Attempting to get secret: %s (sub_key: %s)", secret_name, secret_sub_key)
+        
         # Check if we already have this secret in cache
         if secret_name in self.cache:
+            logger.info("Secret '%s' found in cache", secret_name)
             secret_value = self.cache[secret_name]
             # If we need a sub-key and the cached value is a dict, return the sub-key
             if secret_sub_key is not None and isinstance(secret_value, dict):
+                logger.info("Returning cached sub_key '%s' from secret '%s'", secret_sub_key, secret_name)
                 return secret_value.get(secret_sub_key, default_if_not_found)
             return secret_value
         
         # Step 1: Try AWS Secrets Manager
+        logger.info("Secret '%s' not in cache, trying AWS Secrets Manager", secret_name)
         try:
+            logger.info("Creating boto3 session")
             session = boto3.session.Session()
+            logger.info("Creating secretsmanager client in region %s", self.region_name)
             client = session.client(
                 service_name='secretsmanager',
                 region_name=self.region_name
             )
+            logger.info("Calling get_secret_value for SecretId: %s", secret_name)
             get_secret_value_response = client.get_secret_value(
                 SecretId=secret_name
             )
+            logger.info("Successfully retrieved secret from AWS Secrets Manager: %s", secret_name)
             secret = get_secret_value_response['SecretString']
             try:
                 # Try to parse as JSON (for dictionary secrets)
+                logger.info("Attempting to parse secret as JSON")
                 parsed_secret = json.loads(secret)
+                logger.info("Successfully parsed secret as JSON")
                 # Cache the parsed secret
                 self.cache[secret_name] = parsed_secret
                 # If a sub-key was requested, return that specific value
                 if secret_sub_key is not None:
+                    logger.info("Returning sub_key '%s' from parsed JSON secret", secret_sub_key)
                     return parsed_secret.get(secret_sub_key, default_if_not_found)
                 return parsed_secret
             except json.JSONDecodeError:
                 # If not valid JSON, it's a string secret
+                logger.info("Secret is not valid JSON, treating as string")
                 self.cache[secret_name] = secret
                 return secret
         except Exception as e:
             # AWS Secrets Manager failed, continue to step 2
-            pass
+            logger.warning("Failed to get secret from AWS Secrets Manager: %s - %s", secret_name, str(e))
+            logger.info("Falling back to environment variables")
         
         # Step 2: Try environment variable / .env file
         env_value = os.getenv(secret_name)
         if env_value is not None:
+            logger.info("Found secret '%s' in environment variables", secret_name)
             # Cache the environment value
             self.cache[secret_name] = env_value
             return env_value
         
         # Step 3: Return default value
+        logger.info("Secret '%s' not found in AWS or environment, using default value", secret_name)
         return default_if_not_found
 
 # Create a singleton instance of mySecrets
+logger.info("Creating secrets_manager instance")
 secrets_manager = mySecrets()
 
 # For backward compatibility
@@ -95,6 +129,7 @@ def get_secret(secret_name, default_if_not_found=None):
     Legacy function for backward compatibility.
     Delegates to the new secrets_manager.get_secret method.
     """
+    logger.info("Legacy get_secret called for: %s", secret_name)
     return secrets_manager.get_secret(
         secret_name=secret_name, 
         default_if_not_found=default_if_not_found
@@ -109,10 +144,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-53q+)n(fti3@35hxb3dstzqpw94&x_tp899f-ig9%d$#ldktzk'
+logger.info("Getting SECRET_KEY")
 SECRET_KEY = secrets_manager.get_secret(
     secret_name='SECRET_KEY', 
     default_if_not_found='insecure-dev-key-change-me'
 )
+logger.info("SECRET_KEY retrieved successfully")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -175,6 +212,7 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 
 # Database configuration using the new secrets_manager class
 # This simplifies the previous approach by using the secret_sub_key parameter
+logger.info("Configuring database settings")
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -220,6 +258,7 @@ DATABASES = {
         ),
     }
 }
+logger.info("Database configuration complete")
 
 
 
