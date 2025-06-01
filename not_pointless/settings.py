@@ -20,38 +20,85 @@ from dotenv import load_dotenv
 if os.getenv('ENVIRONMENT') != 'production':
     load_dotenv()
 
-def get_secret(secret_name):
-    """Get secret from AWS Secrets Manager"""
-    region_name = "us-east-1"
-
-    # Create a Secrets Manager client
-    session = boto3.session.Session()
-    client = session.client(
-        service_name='secretsmanager',
-        region_name=region_name
-    )
-
-    try:
-        get_secret_value_response = client.get_secret_value(
-            SecretId=secret_name
-        )
-        secret = get_secret_value_response['SecretString']
-        parsed_secret = json.loads(secret)
-        return parsed_secret
-    except Exception as e:
-        return None
-
-def get_django_secret_key():
-    """Get Django secret key from AWS Secrets Manager or environment variable"""
-    if os.getenv('ENVIRONMENT') == 'production':
-        django_secrets = get_secret("notpointless-django-secret")
-        if django_secrets and 'SECRET_KEY' in django_secrets:
-            secret_key = django_secrets['SECRET_KEY']
-            return secret_key
+class mySecrets:
+    """
+    Class to manage secrets retrieval with caching to avoid multiple API calls
+    """
+    def __init__(self):
+        self.cache = {}
+        self.region_name = "us-east-1"
     
-    # Fallback to environment variable
-    fallback_key = os.getenv('SECRET_KEY', 'insecure-dev-key-change-me')
-    return fallback_key
+    def get_secret(self, *, secret_name, default_if_not_found=None, secret_sub_key=None):
+        """
+        Generic secret retrieval function with three-step fallback:
+        1. Try AWS Secrets Manager
+        2. Try .env file / environment variable
+        3. Return default_if_not_found
+        
+        Parameters:
+        - secret_name (str): Name of the secret to retrieve (required)
+        - default_if_not_found: Value to return if secret is not found (default=None)
+        - secret_sub_key (str): If the secret is a dictionary, get this specific key (default=None)
+        """
+        # Check if we already have this secret in cache
+        if secret_name in self.cache:
+            secret_value = self.cache[secret_name]
+            # If we need a sub-key and the cached value is a dict, return the sub-key
+            if secret_sub_key is not None and isinstance(secret_value, dict):
+                return secret_value.get(secret_sub_key, default_if_not_found)
+            return secret_value
+        
+        # Step 1: Try AWS Secrets Manager
+        try:
+            session = boto3.session.Session()
+            client = session.client(
+                service_name='secretsmanager',
+                region_name=self.region_name
+            )
+            get_secret_value_response = client.get_secret_value(
+                SecretId=secret_name
+            )
+            secret = get_secret_value_response['SecretString']
+            try:
+                # Try to parse as JSON (for dictionary secrets)
+                parsed_secret = json.loads(secret)
+                # Cache the parsed secret
+                self.cache[secret_name] = parsed_secret
+                # If a sub-key was requested, return that specific value
+                if secret_sub_key is not None:
+                    return parsed_secret.get(secret_sub_key, default_if_not_found)
+                return parsed_secret
+            except json.JSONDecodeError:
+                # If not valid JSON, it's a string secret
+                self.cache[secret_name] = secret
+                return secret
+        except Exception as e:
+            # AWS Secrets Manager failed, continue to step 2
+            pass
+        
+        # Step 2: Try environment variable / .env file
+        env_value = os.getenv(secret_name)
+        if env_value is not None:
+            # Cache the environment value
+            self.cache[secret_name] = env_value
+            return env_value
+        
+        # Step 3: Return default value
+        return default_if_not_found
+
+# Create a singleton instance of mySecrets
+secrets_manager = mySecrets()
+
+# For backward compatibility
+def get_secret(secret_name, default_if_not_found=None):
+    """
+    Legacy function for backward compatibility.
+    Delegates to the new secrets_manager.get_secret method.
+    """
+    return secrets_manager.get_secret(
+        secret_name=secret_name, 
+        default_if_not_found=default_if_not_found
+    )
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -62,7 +109,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-53q+)n(fti3@35hxb3dstzqpw94&x_tp899f-ig9%d$#ldktzk'
-SECRET_KEY = get_django_secret_key()
+SECRET_KEY = secrets_manager.get_secret(
+    secret_name='SECRET_KEY', 
+    default_if_not_found='insecure-dev-key-change-me'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -123,46 +173,53 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Get database credentials from AWS Secrets Manager in production
-if os.getenv('ENVIRONMENT') == 'production':
-    db_secrets = get_secret("NotPointlessPostgresqlPassword")
-    if db_secrets:
-        db_password = db_secrets.get('password', '')
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': db_secrets.get('dbname', 'postgres'),
-                'USER': db_secrets.get('username', 'postgres'),
-                'PASSWORD': db_password,
-                'HOST': db_secrets.get('host', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
-                'PORT': db_secrets.get('port', '5432'),
-            }
-        }
-    else:
-        # Fallback to environment variables
-        fallback_password = os.getenv('DB_PASSWORD', '')
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql',
-                'NAME': os.getenv('DB_NAME', 'postgres'),
-                'USER': os.getenv('DB_USER', 'postgres'),
-                'PASSWORD': fallback_password,
-                'HOST': os.getenv('DB_HOST', 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'),
-                'PORT': os.getenv('DB_PORT', '5432'),
-            }
-        }
-else:
-    # Development database configuration
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',
-            'USER': 'postgres',
-            'PASSWORD': os.getenv('DB_PASSWORD', ''),
-            'HOST': 'dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com',
-            'PORT': '5432',
-        }
+# Database configuration using the new secrets_manager class
+# This simplifies the previous approach by using the secret_sub_key parameter
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': secrets_manager.get_secret(
+            secret_name="NotPointlessPostgresqlPassword", 
+            secret_sub_key='dbname',
+            default_if_not_found=secrets_manager.get_secret(
+                secret_name='DB_NAME', 
+                default_if_not_found='postgres'
+            )
+        ),
+        'USER': secrets_manager.get_secret(
+            secret_name="NotPointlessPostgresqlPassword", 
+            secret_sub_key='username',
+            default_if_not_found=secrets_manager.get_secret(
+                secret_name='DB_USER', 
+                default_if_not_found='postgres'
+            )
+        ),
+        'PASSWORD': secrets_manager.get_secret(
+            secret_name="NotPointlessPostgresqlPassword", 
+            secret_sub_key='password',
+            default_if_not_found=secrets_manager.get_secret(
+                secret_name='DB_PASSWORD', 
+                default_if_not_found=''
+            )
+        ),
+        'HOST': secrets_manager.get_secret(
+            secret_name="NotPointlessPostgresqlPassword", 
+            secret_sub_key='host',
+            default_if_not_found=secrets_manager.get_secret(
+                secret_name='DB_HOST', 
+                default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
+            )
+        ),
+        'PORT': secrets_manager.get_secret(
+            secret_name="NotPointlessPostgresqlPassword", 
+            secret_sub_key='port',
+            default_if_not_found=secrets_manager.get_secret(
+                secret_name='DB_PORT', 
+                default_if_not_found='5432'
+            )
+        ),
     }
+}
 
 
 

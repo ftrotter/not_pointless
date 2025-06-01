@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Endpoint
-from .settings import get_secret, get_django_secret_key
+from .settings import secrets_manager, get_secret
 import os
 
 def homepage(request):
@@ -35,7 +35,10 @@ def debug_secrets(request):
     """
     try:
         # Get Django secret key (first 10 characters)
-        django_secret = get_django_secret_key()
+        django_secret = secrets_manager.get_secret(
+            secret_name='SECRET_KEY', 
+            default_if_not_found='insecure-dev-key-change-me'
+        )
         django_secret_preview = django_secret[:10] if django_secret else "Not found"
         
         # Initialize debug info
@@ -128,7 +131,12 @@ def debug_secrets(request):
                     raw_secret_info = f"JSON Parse Success. Type: {type(parsed_secret).__name__}, Keys: {parsed_keys}"
                     
                     if isinstance(parsed_secret, dict) and 'password' in parsed_secret:
-                        db_password = parsed_secret['password']
+                        # Example of using secret_sub_key parameter
+                        db_password = secrets_manager.get_secret(
+                            secret_name="NotPointlessPostgresqlPassword",
+                            secret_sub_key='password',
+                            default_if_not_found=''
+                        )
                         db_secret_preview = f"Found password, length: {len(db_password)}, first 5: {db_password[:5]}"
                     else:
                         db_secret_preview = "No password key found in parsed JSON"
@@ -144,7 +152,10 @@ def debug_secrets(request):
                 db_secret_preview = "AWS connection failed"
         else:   
             # In development, show first 5 chars of DB_PASSWORD env var
-            db_password = os.getenv('DB_PASSWORD', '')
+            db_password = secrets_manager.get_secret(
+                secret_name='DB_PASSWORD',
+                default_if_not_found=''
+            )
             db_secret_preview = db_password[:5] if db_password else "None"
         
         context = {
