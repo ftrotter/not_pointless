@@ -179,12 +179,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 #SECRET_KEY = 'django-insecure-53q+)n(fti3@35hxb3dstzqpw94&x_tp899f-ig9%d$#ldktzk'
-logger.info("Getting SECRET_KEY")
+logger.info("Getting notpointless-django-secret")
 SECRET_KEY = secrets_manager.get_secret(
-    secret_name='SECRET_KEY', 
+    secret_name='notpointless-django-secret', 
     default_if_not_found='insecure-dev-key-change-me'
 )
-logger.info("SECRET_KEY retrieved successfully")
+logger.info("notpointless-django-secret retrieved successfully")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -254,42 +254,27 @@ DATABASES = {
         'NAME': secrets_manager.get_secret(
             secret_name="NotPointlessPostgresqlPassword", 
             secret_sub_key='dbname',
-            default_if_not_found=secrets_manager.get_secret(
-                secret_name='DB_NAME', 
-                default_if_not_found='postgres'
-            )
+            default_if_not_found='postgres'
         ),
         'USER': secrets_manager.get_secret(
             secret_name="NotPointlessPostgresqlPassword", 
             secret_sub_key='username',
-            default_if_not_found=secrets_manager.get_secret(
-                secret_name='DB_USER', 
-                default_if_not_found='postgres'
-            )
+            default_if_not_found='insecure_user'
         ),
         'PASSWORD': secrets_manager.get_secret(
             secret_name="NotPointlessPostgresqlPassword", 
             secret_sub_key='password',
-            default_if_not_found=secrets_manager.get_secret(
-                secret_name='DB_PASSWORD', 
-                default_if_not_found=''
-            )
+            default_if_not_found='insecure_password' 
         ),
         'HOST': secrets_manager.get_secret(
             secret_name="NotPointlessPostgresqlPassword", 
             secret_sub_key='host',
-            default_if_not_found=secrets_manager.get_secret(
-                secret_name='DB_HOST', 
-                default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
-            )
+            default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
         ),
         'PORT': secrets_manager.get_secret(
             secret_name="NotPointlessPostgresqlPassword", 
             secret_sub_key='port',
-            default_if_not_found=secrets_manager.get_secret(
-                secret_name='DB_PORT', 
-                default_if_not_found='5432'
-            )
+            default_if_not_found='5432'
         ),
     }
 }
