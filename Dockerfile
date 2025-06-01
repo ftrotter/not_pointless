@@ -32,4 +32,4 @@ EXPOSE 8000
 ENTRYPOINT ["/app/scripts/startup.sh"]
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--timeout", "120", "--access-logfile", "-", "--error-logfile", "-", "--log-level", "info", "--logger-class", "gunicorn.glogging.Logger", "--capture-output", "not_pointless.wsgi:application"]
+CMD ["gunicorn", "--config", "scripts/gunicorn_config.py", "not_pointless.wsgi:application"]
