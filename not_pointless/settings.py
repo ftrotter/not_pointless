@@ -24,10 +24,10 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s [%(levelname)s] %(name)s - %(message)s'
+            'format': '%(asctime)s [%(levelname)s] %(name)s - POINTLESS: %(message)s'
         },
         'simple': {
-            'format': '%(levelname)s %(message)s'
+            'format': '%(levelname)s POINTLESS: %(message)s'
         },
     },
     'handlers': {

@@ -14,7 +14,7 @@ import logging
 # Configure basic logging before loading Django
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+    format='%(asctime)s [%(levelname)s] %(name)s - POINTLESS: %(message)s',
     handlers=[
         logging.StreamHandler(sys.stdout)
     ]

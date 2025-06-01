@@ -35,11 +35,11 @@ logconfig_dict = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s [%(process)d] [%(levelname)s] %(name)s - %(message)s',
+            'format': '%(asctime)s [%(process)d] [%(levelname)s] %(name)s - POINTLESS: %(message)s',
             'datefmt': '%Y-%m-%d %H:%M:%S',
         },
         'simple': {
-            'format': '%(levelname)s %(message)s',
+            'format': '%(levelname)s POINTLESS: %(message)s',
         },
     },
     'handlers': {

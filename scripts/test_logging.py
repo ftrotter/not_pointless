@@ -12,7 +12,7 @@ def setup_logging(log_level='INFO'):
     """Configure logging with a basic configuration"""
     logging.basicConfig(
         level=getattr(logging, log_level.upper()),
-        format='%(asctime)s [%(levelname)s] %(name)s - %(message)s',
+        format='%(asctime)s [%(levelname)s] %(name)s - POINTLESS: %(message)s',
         handlers=[
             logging.StreamHandler(sys.stdout)
         ]
