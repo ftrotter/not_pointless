@@ -131,11 +131,13 @@ class mySecrets:
                 if secret_sub_key is not None:
                     logger.info("Returning sub_key '%s' from parsed JSON secret", secret_sub_key)
                     return parsed_secret.get(secret_sub_key, default_if_not_found)
+                logger.info(f"For secret '{secret_name}', returning JSON value of '{parsed_secret}")
                 return parsed_secret
             except json.JSONDecodeError:
                 # If not valid JSON, it's a string secret
                 logger.info("Secret is not valid JSON, treating as string")
                 self.cache[secret_name] = secret
+                logger.info(f"For secret '{secret_name}', returning JSON value of '{secret}")
                 return secret
         except Exception as e:
             # AWS Secrets Manager failed, continue to step 2
