@@ -25,3 +25,4 @@ run:
       value: "INFO"
     # Note: SECRET_KEY is automatically handled by the application using AWS Secrets Manager
     # Other sensitive values should not be included in this file
+
