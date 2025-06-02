@@ -158,18 +158,6 @@ class mySecrets:
 logger.info("Creating secrets_manager instance")
 secrets_manager = mySecrets()
 
-# For backward compatibility
-def get_secret(secret_name, default_if_not_found=None):
-    """
-    Legacy function for backward compatibility.
-    Delegates to the new secrets_manager.get_secret method.
-    """
-    logger.info("Legacy get_secret called for: %s", secret_name)
-    return secrets_manager.get_secret(
-        secret_name=secret_name, 
-        default_if_not_found=default_if_not_found
-    )
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

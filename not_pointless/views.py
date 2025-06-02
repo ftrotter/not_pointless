@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Endpoint
-from .settings import secrets_manager, get_secret, logger
+from .settings import secrets_manager, logger
 import os
 import time
 
