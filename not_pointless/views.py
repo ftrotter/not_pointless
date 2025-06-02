@@ -60,12 +60,18 @@ def debug_secrets(request):
     
     try:
         logger.info("Attempting to retrieve SECRET_KEY for debug display")
-        # Get Django secret key (first 10 characters)
+        # Define how many characters to show (0 means show all)
+        chars_to_show = 0
+        
+        # Get Django secret key
         django_secret = secrets_manager.get_secret(
             secret_name='SECRET_KEY', 
             default_if_not_found='insecure-dev-key-change-me'
         )
-        django_secret_preview = django_secret[:10] if django_secret else "Not found"
+        
+        # If chars_to_show is 0, show the entire key, otherwise show the specified number of characters
+        django_secret_preview = django_secret if chars_to_show == 0 else django_secret[:chars_to_show]
+        django_secret_preview = django_secret_preview if django_secret else "Not found"
         logger.info("SECRET_KEY retrieved for debug display")
         
         # Initialize debug info
@@ -139,9 +145,12 @@ def debug_secrets(request):
                     region_name=region_name
                 )
                 
+                # Define the secret name we're retrieving
+                aws_secret_name = "NotPointlessPostgresqlPassword"
+                
                 # Get the full response object
                 get_secret_value_response = client.get_secret_value(
-                    SecretId="NotPointlessPostgresqlPassword"
+                    SecretId=aws_secret_name
                 )
                 
                 # Show the complete raw response structure
@@ -150,7 +159,7 @@ def debug_secrets(request):
                 
                 # Get the actual secret string
                 raw_secret = get_secret_value_response['SecretString']
-                raw_secret_preview = f"Type: {type(raw_secret).__name__}, Length: {len(raw_secret)}, Content: {repr(raw_secret)}"
+                raw_secret_preview = f"Secret Name: {aws_secret_name}, Type: {type(raw_secret).__name__}, Length: {len(raw_secret)}, Content: {repr(raw_secret)}"
                 
                 # Try to parse as JSON
                 try:
@@ -161,11 +170,13 @@ def debug_secrets(request):
                     if isinstance(parsed_secret, dict) and 'password' in parsed_secret:
                         # Example of using secret_sub_key parameter
                         db_password = secrets_manager.get_secret(
-                            secret_name="NotPointlessPostgresqlPassword",
+                            secret_name=aws_secret_name,
                             secret_sub_key='password',
                             default_if_not_found=''
                         )
-                        db_secret_preview = f"Found password, length: {len(db_password)}, first 5: {db_password[:5]}"
+                        # Use the same chars_to_show logic for consistency in production
+                        password_preview = db_password if chars_to_show == 0 else db_password[:chars_to_show]
+                        db_secret_preview = f"Found password, length: {len(db_password)}, value: {password_preview}"
                     else:
                         db_secret_preview = "No password key found in parsed JSON"
                         
@@ -179,12 +190,14 @@ def debug_secrets(request):
                 raw_secret_info = f"AWS Error: {str(aws_e)}"
                 db_secret_preview = "AWS connection failed"
         else:   
-            # In development, show first 5 chars of DB_PASSWORD env var
+            # In development, show DB_PASSWORD env var based on chars_to_show
             db_password = secrets_manager.get_secret(
                 secret_name='DB_PASSWORD',
                 default_if_not_found=''
             )
-            db_secret_preview = db_password[:5] if db_password else "None"
+            # Use the same chars_to_show logic for consistency
+            db_secret_preview = db_password if chars_to_show == 0 else db_password[:chars_to_show]
+            db_secret_preview = db_secret_preview if db_password else "None"
         
         context = {
             'django_secret_preview': django_secret_preview,
@@ -196,6 +209,7 @@ def debug_secrets(request):
             'aws_raw_response': aws_raw_response,
             'boto3_session_info': boto3_session_info,
             'credentials_info': credentials_info,
+            'aws_secret_name': aws_secret_name if os.getenv('ENVIRONMENT') == 'production' else 'N/A (development mode)',
         }
         
         # Log completion time
