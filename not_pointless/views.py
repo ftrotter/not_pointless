@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.conf import settings
 from .models import Endpoint
 from .settings import secrets_manager, logger
 import os
@@ -26,8 +27,14 @@ def endpoint_print(request):
     """
     Display distinct URLs from the endpoint table (requires database connection)
     """
+    is_debug_credentials = True
     logger.info("Endpoint print view called (requires database)")
     start_time = time.time()
+    
+    if is_debug_credentials:
+        # Log database credentials that have already been loaded
+        db_config = settings.DATABASES.get('default', {})
+        logger.info(f"DEBUG DB CREDENTIALS: {db_config}")
     
     try:
         # Get distinct endpoint URLs from the database
