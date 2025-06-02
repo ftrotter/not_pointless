@@ -11,11 +11,12 @@ python manage.py test_db_connection
 ```
 
 This command:
+
 - Tests PostgreSQL connection
 - Checks access to the `not_pointless.endpoint` table
 - Shows record count and sample data
 - Provides troubleshooting info if connection fails
 
+## Checkpoint
 
-# Checkpoint
-- working without VPC
+- working without VPC and the database credentials are loading from the AWS secret system correctly
