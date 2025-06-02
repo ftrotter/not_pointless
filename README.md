@@ -18,4 +18,4 @@ This command:
 
 
 # Checkpoint
-- last error message was: 2025-06-01 17:17:59 [1] [INFO] gunicorn.error - Handling signal: term
+- working without VPC
