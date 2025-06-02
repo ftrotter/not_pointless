@@ -235,40 +235,63 @@ WSGI_APPLICATION = 'not_pointless.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# Database configuration using the new secrets_manager class
-# This simplifies the previous approach by using the secret_sub_key parameter
-logger.info("Configuring database settings")
+# Database configuration using lazy loading to avoid accessing AWS Secrets Manager during build
+logger.info("Setting up lazy database configuration")
+
+def get_database_config():
+    """
+    Lazy loading function for database configuration.
+    This is only called when the database configuration is actually needed,
+    not during module import or build time.
+    """
+    logger.info("Lazy loading database configuration")
+    return {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': secrets_manager.get_secret(
+                secret_name="NotPointlessPostgresqlPassword", 
+                secret_sub_key='dbname',
+                default_if_not_found='postgres'
+            ),
+            'USER': secrets_manager.get_secret(
+                secret_name="NotPointlessPostgresqlPassword", 
+                secret_sub_key='username',
+                default_if_not_found='insecure_user'
+            ),
+            'PASSWORD': secrets_manager.get_secret(
+                secret_name="NotPointlessPostgresqlPassword", 
+                secret_sub_key='password',
+                default_if_not_found='insecure_password' 
+            ),
+            'HOST': secrets_manager.get_secret(
+                secret_name="NotPointlessPostgresqlPassword", 
+                secret_sub_key='host',
+                default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
+            ),
+            'PORT': secrets_manager.get_secret(
+                secret_name="NotPointlessPostgresqlPassword", 
+                secret_sub_key='port',
+                default_if_not_found='5432'
+            ),
+        }
+    }
+
+# For commands that don't need database access (like collectstatic),
+# use a simple SQLite configuration during build time
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': secrets_manager.get_secret(
-            secret_name="NotPointlessPostgresqlPassword", 
-            secret_sub_key='dbname',
-            default_if_not_found='postgres'
-        ),
-        'USER': secrets_manager.get_secret(
-            secret_name="NotPointlessPostgresqlPassword", 
-            secret_sub_key='username',
-            default_if_not_found='insecure_user'
-        ),
-        'PASSWORD': secrets_manager.get_secret(
-            secret_name="NotPointlessPostgresqlPassword", 
-            secret_sub_key='password',
-            default_if_not_found='insecure_password' 
-        ),
-        'HOST': secrets_manager.get_secret(
-            secret_name="NotPointlessPostgresqlPassword", 
-            secret_sub_key='host',
-            default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
-        ),
-        'PORT': secrets_manager.get_secret(
-            secret_name="NotPointlessPostgresqlPassword", 
-            secret_sub_key='port',
-            default_if_not_found='5432'
-        ),
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-logger.info("Database configuration complete")
+
+# Only configure real database for runtime operations, not during build
+if os.getenv('ENVIRONMENT') == 'production' and 'collectstatic' not in sys.argv:
+    logger.info("Runtime detected, loading real database configuration")
+    DATABASES = get_database_config()
+    logger.info("Database configuration complete")
+else:
+    logger.info("Build or collectstatic detected, using SQLite configuration")
 
 
 
