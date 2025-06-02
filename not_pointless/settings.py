@@ -266,7 +266,7 @@ def get_database_config():
             'HOST': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
                 secret_sub_key='host',
-                default_if_not_found='dev-notpointless.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
+                default_if_not_found='endpoing-rds.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
             ),
             'PORT': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
