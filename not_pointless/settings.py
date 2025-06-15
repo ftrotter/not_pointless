@@ -245,34 +245,47 @@ def get_database_config():
     not during module import or build time.
     """
     logger.info("Lazy loading database configuration")
+    
+    # Get database name and schema from secrets or environment variables
+    db_name = secrets_manager.get_secret(
+        secret_name="NotPointlessPostgresqlPassword", 
+        secret_sub_key='dbname',
+        default_if_not_found=os.getenv('DB_NAME', 'postgres')
+    )
+    
+    # Get schema separately - this is not part of Django's database configuration
+    # but we log it for reference
+    db_schema = os.getenv('DB_SCHEMA', 'not_pointless')
+    logger.info(f"Using database schema: {db_schema}")
+    
     return {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': secrets_manager.get_secret(
-                secret_name="NotPointlessPostgresqlPassword", 
-                secret_sub_key='dbname',
-                default_if_not_found='postgres'
-            ),
+            'NAME': db_name,
             'USER': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
                 secret_sub_key='username',
-                default_if_not_found='insecure_user'
+                default_if_not_found=os.getenv('DB_USER', 'insecure_user')
             ),
             'PASSWORD': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
                 secret_sub_key='password',
-                default_if_not_found='insecure_password' 
+                default_if_not_found=os.getenv('DB_PASSWORD', 'insecure_password')
             ),
             'HOST': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
                 secret_sub_key='host',
-                default_if_not_found='endpoing-rds.cybcmwkoc02f.us-east-1.rds.amazonaws.com'
+                default_if_not_found=os.getenv('DB_HOST', 'endpoing-rds.cybcmwkoc02f.us-east-1.rds.amazonaws.com')
             ),
             'PORT': secrets_manager.get_secret(
                 secret_name="NotPointlessPostgresqlPassword", 
                 secret_sub_key='port',
-                default_if_not_found='5432'
+                default_if_not_found=os.getenv('DB_PORT', '5432')
             ),
+            'OPTIONS': {
+                # Set the default schema for PostgreSQL
+                'options': f'-c search_path={db_schema},public'
+            }
         }
     }
 
@@ -286,8 +299,12 @@ DATABASES = {
 }
 
 # Only configure real database for runtime operations, not during build
-if os.getenv('ENVIRONMENT') == 'production' and 'collectstatic' not in sys.argv:
-    logger.info("Runtime detected, loading real database configuration")
+# For local development, always use the real database configuration if .env file exists
+if (os.getenv('ENVIRONMENT') == 'production' and 'collectstatic' not in sys.argv) or \
+   'test_db_connection' in sys.argv or \
+   'runserver' in sys.argv or \
+   os.path.exists(os.path.join(BASE_DIR, '.env')):
+    logger.info("Runtime, test_db_connection, or local development detected, loading real database configuration")
     DATABASES = get_database_config()
     logger.info("Database configuration complete")
 else:

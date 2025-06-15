@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.utils import OperationalError
+import os
 import sys
 
 
@@ -8,7 +9,13 @@ class Command(BaseCommand):
     help = 'Test database connection and query the endpoint table'
 
     def handle(self, *args, **options):
+        # Get schema name from environment variable with fallback to "not_pointless"
+        db_schema = os.getenv('DB_SCHEMA', 'not_pointless')
+        db_table = os.getenv('DB_TABLE', 'endpoint')
+        
         self.stdout.write("Testing database connection...")
+        self.stdout.write(f"Using schema: {db_schema}")
+        self.stdout.write(f"Using table: {db_table}")
         
         try:
             # Test basic connection
@@ -20,11 +27,11 @@ class Command(BaseCommand):
                 )
                 self.stdout.write(f"PostgreSQL version: {version[0]}")
                 
-                # Test if we can access the endpoint table in the not_pointless schema
-                self.stdout.write("\nTesting access to endpoint table...")
+                # Test if we can access the endpoint table in the specified schema
+                self.stdout.write(f"\nTesting access to {db_schema}.{db_table} table...")
                 
                 try:
-                    cursor.execute("SELECT COUNT(*) FROM not_pointless.endpoint;")
+                    cursor.execute(f"SELECT COUNT(*) FROM {db_schema}.{db_table};")
                     count = cursor.fetchone()[0]
                     self.stdout.write(
                         self.style.SUCCESS(f"✓ Successfully accessed endpoint table!")
@@ -33,9 +40,9 @@ class Command(BaseCommand):
                     
                     # Show a few sample records if they exist
                     if count > 0:
-                        cursor.execute("""
+                        cursor.execute(f"""
                             SELECT id, endpoint_url, domain_name, created_at 
-                            FROM not_pointless.endpoint 
+                            FROM {db_schema}.{db_table} 
                             ORDER BY created_at DESC 
                             LIMIT 5;
                         """)
@@ -51,7 +58,7 @@ class Command(BaseCommand):
                         self.style.ERROR(f"✗ Error accessing endpoint table: {e}")
                     )
                     self.stdout.write("This might be because:")
-                    self.stdout.write("1. The table doesn't exist in the not_pointless schema")
+                    self.stdout.write(f"1. The table '{db_table}' doesn't exist in the '{db_schema}' schema")
                     self.stdout.write("2. The schema doesn't exist")
                     self.stdout.write("3. Permission issues")
                     
