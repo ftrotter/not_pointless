@@ -143,52 +143,52 @@ CREATE TABLE "inventoryTransactionType" (
 INSERT INTO "inventoryTransactionType" VALUES (1,'Purchased'),(2,'Sold'),(3,'On Hold'),(4,'Waste');
 
 --
--- Table structure for table "orderDetailStat"
+-- Table structure for table "orderDetailStatus"
 --
 
-DROP TABLE IF EXISTS "orderDetailStat" CASCADE;
-CREATE TABLE "orderDetailStat" (
+DROP TABLE IF EXISTS "orderDetailStatus" CASCADE;
+CREATE TABLE "orderDetailStatus" (
   id integer NOT NULL PRIMARY KEY,
   "statusName" varchar(50) NOT NULL
 );
 
 --
--- Dumping data for table "orderDetailStat"
+-- Dumping data for table "orderDetailStatus"
 --
 
-INSERT INTO "orderDetailStat" VALUES (0,'None'),(1,'Allocated'),(2,'Invoiced'),(3,'Shipped'),(4,'On Order'),(5,'No Stock');
+INSERT INTO "orderDetailStatus" VALUES (0,'None'),(1,'Allocated'),(2,'Invoiced'),(3,'Shipped'),(4,'On Order'),(5,'No Stock');
 
 --
--- Table structure for table "orderStat"
+-- Table structure for table "orderStatus"
 --
 
-DROP TABLE IF EXISTS "orderStat" CASCADE;
-CREATE TABLE "orderStat" (
+DROP TABLE IF EXISTS "orderStatus" CASCADE;
+CREATE TABLE "orderStatus" (
   id smallint NOT NULL PRIMARY KEY,
   "statusName" varchar(50) NOT NULL
 );
 
 --
--- Dumping data for table "orderStat"
+-- Dumping data for table "orderStatus"
 --
 
-INSERT INTO "orderStat" VALUES (0,'New'),(1,'Invoiced'),(2,'Shipped'),(3,'Closed');
+INSERT INTO "orderStatus" VALUES (0,'New'),(1,'Invoiced'),(2,'Shipped'),(3,'Closed');
 
 --
--- Table structure for table "orderTaxStat"
+-- Table structure for table "orderTaxStatus"
 --
 
-DROP TABLE IF EXISTS "orderTaxStat" CASCADE;
-CREATE TABLE "orderTaxStat" (
+DROP TABLE IF EXISTS "orderTaxStatus" CASCADE;
+CREATE TABLE "orderTaxStatus" (
   id smallint NOT NULL PRIMARY KEY,
   "taxStatName" varchar(50) NOT NULL
 );
 
 --
--- Dumping data for table "orderTaxStat"
+-- Dumping data for table "orderTaxStatus"
 --
 
-INSERT INTO "orderTaxStat" VALUES (0,'Tax Exempt'),(1,'Taxable');
+INSERT INTO "orderTaxStatus" VALUES (0,'Tax Exempt'),(1,'Taxable');
 
 --
 -- Table structure for table privilege
