@@ -1,0 +1,38 @@
+{
+    "address1": "Illinoisstr. 70569",
+    "address2": "Stuttgart",
+    "components": {
+        "administrative_area": "Baden-Württemberg",
+        "administrative_area_iso2": "DE-BW",
+        "sub_administrative_area": "Stuttgart, Stadtkreis",
+        "country_iso_3": "DEU",
+        "locality": "Stuttgart",
+        "premise": "70569",
+        "premise_number": "70569",
+        "thoroughfare": "Illinoisstr."
+    },
+    "metadata": {
+        "latitude": 48.787352,
+        "longitude": 9.185779,
+        "geocode_precision": "Locality",
+        "max_geocode_precision": "Premise",
+        "address_format": "thoroughfare premise|locality"
+    },
+    "analysis": {
+        "verification_status": "Partial",
+        "address_precision": "Locality",
+        "max_address_precision": "DeliveryPoint",
+        "changes": {
+            "components": {
+                "administrative_area": "Added",
+                "administrative_area_iso2": "Added",
+                "sub_administrative_area": "Added",
+                "country_iso_3": "Added",
+                "locality": "Verified-NoChange",
+                "premise": "Identified-NoChange",
+                "premise_number": "Identified-NoChange",
+                "thoroughfare": "Identified-AliasChange"
+            }
+        }
+    }
+}

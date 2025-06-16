@@ -1,0 +1,47 @@
+{
+    "input_index": 0,
+    "candidate_index": 0,
+    "delivery_line_1": "6411 Fannin St",
+    "last_line": "Houston TX 77030-1501",
+    "delivery_point_barcode": "770301501114",
+    "smarty_key": "1463915855",
+    "components": {
+        "primary_number": "6411",
+        "street_name": "Fannin",
+        "street_suffix": "St",
+        "city_name": "Houston",
+        "default_city_name": "Houston",
+        "state_abbreviation": "TX",
+        "zipcode": "77030",
+        "plus4_code": "1501",
+        "delivery_point": "11",
+        "delivery_point_check_digit": "4"
+    },
+    "metadata": {
+        "record_type": "S",
+        "zip_type": "Standard",
+        "county_fips": "48201",
+        "county_name": "Harris",
+        "carrier_route": "C014",
+        "congressional_district": "09",
+        "rdi": "Commercial",
+        "elot_sequence": "0126",
+        "elot_sort": "A",
+        "latitude": 29.713663,
+        "longitude": -95.395782,
+        "coordinate_license": 1,
+        "precision": "Rooftop",
+        "time_zone": "Central",
+        "utc_offset": -6,
+        "dst": true
+    },
+    "analysis": {
+        "dpv_match_code": "Y",
+        "dpv_footnotes": "AABB",
+        "dpv_cmra": "N",
+        "dpv_vacant": "N",
+        "dpv_no_stat": "N",
+        "active": "Y",
+        "enhanced_match": "postal-match"
+    }
+}
