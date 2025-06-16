@@ -1,5 +1,6 @@
 --
 -- Table structure for table "inventoryTransaction"
+-- Creation Order: 3 - This table should be created after "order" and "purchaseOrder" tables as it depends on inventoryTransactionType, order, product, and purchaseOrder
 --
 
 DROP TABLE IF EXISTS "inventoryTransaction";

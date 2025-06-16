@@ -1,5 +1,6 @@
 --
 -- Table structure for table "orderDetail"
+-- Creation Order: 2 - This table should be created after "order" table as it depends on "order", product, and orderDetailStatus
 --
 
 DROP TABLE IF EXISTS "orderDetail";

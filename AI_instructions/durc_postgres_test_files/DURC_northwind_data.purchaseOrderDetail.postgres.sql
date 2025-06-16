@@ -1,5 +1,6 @@
 --
 -- Table structure for table "purchaseOrderDetail"
+-- Creation Order: 4 - This table should be created last as it depends on inventoryTransaction, product, and purchaseOrder
 --
 
 DROP TABLE IF EXISTS "purchaseOrderDetail";

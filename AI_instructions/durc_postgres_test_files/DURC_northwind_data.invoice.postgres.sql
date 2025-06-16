@@ -1,5 +1,6 @@
 --
 -- Table structure for table "invoice"
+-- Creation Order: 2 - This table should be created after "order" table as it depends on "order"
 --
 
 DROP TABLE IF EXISTS "invoice";

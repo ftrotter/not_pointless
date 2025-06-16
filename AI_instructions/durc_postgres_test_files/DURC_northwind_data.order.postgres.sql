@@ -1,5 +1,6 @@
 --
 -- Table structure for table "order"
+-- Creation Order: 1 - This table should be created first as it depends on tables from the model file (customer, employee, orderStatus, orderTaxStatus, shipper)
 --
 
 DROP TABLE IF EXISTS "order";
