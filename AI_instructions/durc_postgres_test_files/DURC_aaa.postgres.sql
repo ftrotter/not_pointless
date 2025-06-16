@@ -3,6 +3,9 @@
 -- Host: localhost    Database: DURC_aaa
 -- ------------------------------------------------------
 
+
+SET search_path TO DURC_aaa;
+
 --
 -- Table structure for table "Should be Ignored"
 --
@@ -87,19 +90,7 @@ CREATE TABLE "comment" (
   updated_at timestamp NOT NULL
 );
 
---
--- Table structure for table "donation"
---
 
-DROP TABLE IF EXISTS "donation";
-CREATE TABLE "donation" (
-  id SERIAL PRIMARY KEY,
-  amount integer NOT NULL,
-  nonprofitcorp_id integer NOT NULL,
-  created_at timestamp NOT NULL,
-  updated_at timestamp NOT NULL,
-  deleted_at timestamp DEFAULT NULL
-);
 
 --
 -- Table structure for table "filterTest"
@@ -319,15 +310,4 @@ CREATE TABLE "test_null_default" (
   non_null_default varchar(255) NOT NULL DEFAULT 'I CANNOT BE NULL'
 );
 
---
--- Table structure for table "vote"
---
 
-DROP TABLE IF EXISTS "vote";
-CREATE TABLE "vote" (
-  id SERIAL PRIMARY KEY,
-  post_id integer NOT NULL,
-  votenum varchar(11) NOT NULL,
-  updated_at timestamp NOT NULL,
-  created_at timestamp NOT NULL
-);
