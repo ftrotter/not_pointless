@@ -1,0 +1,1 @@
+--- Create an address table using the Smarty Streets API schema as the basis. 
