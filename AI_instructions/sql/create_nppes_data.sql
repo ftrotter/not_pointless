@@ -1,5 +1,5 @@
 -- NPI Core Entity Table
-CREATE TABLE npidetails (
+CREATE TABLE npidetail (
     npi BIGINT PRIMARY KEY,
     entity_type_code SMALLINT NOT NULL, -- 1 = individual, 2 = organization
     replacement_npi VARCHAR(11),
@@ -12,7 +12,7 @@ CREATE TABLE npidetails (
 );
 
 -- Individuals
-CREATE TABLE npi_individuals (
+CREATE TABLE npi_individual (
     npi BIGINT PRIMARY KEY REFERENCES npidetails(npi),
     last_name VARCHAR(36),
     first_name VARCHAR(36),
@@ -25,7 +25,7 @@ CREATE TABLE npi_individuals (
 );
 
 -- Organizations
-CREATE TABLE npi_organizations (
+CREATE TABLE npi_organization (
     npi BIGINT PRIMARY KEY REFERENCES npidetails(npi),
     organization_name VARCHAR(101),
     authorized_official_last_name VARCHAR(36),
@@ -42,19 +42,10 @@ CREATE TABLE npi_organizations (
 );
 
 
--- Taxonomy Entries
-CREATE TABLE npi_taxonomies (
-    id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES npidetails(npi),
-    taxonomy_code VARCHAR(11),
-    license_number VARCHAR(21),
-    license_state_id INTEGER REFERENCES state_code_lut(id),
-    is_primary BOOLEAN,
-    taxonomy_group VARCHAR(11)
-);
+
 
 -- Identifiers
-CREATE TABLE npi_identifiers (
+CREATE TABLE npi_identifier (
     id SERIAL PRIMARY KEY,
     npi BIGINT REFERENCES npidetails(npi),
     identifier VARCHAR(21),
@@ -98,7 +89,7 @@ CREATE TABLE state_code_lut (
 );
 
 -- Organization Alternate Names
-CREATE TABLE orgnames (
+CREATE TABLE orgname (
     id SERIAL PRIMARY KEY,
     npi BIGINT REFERENCES npidetails(npi),
     organization_name VARCHAR(70),
@@ -107,7 +98,7 @@ CREATE TABLE orgnames (
 );
 
 -- Addresses
-CREATE TABLE npi_addresses (
+CREATE TABLE npi_address (
     id SERIAL PRIMARY KEY,
     npi BIGINT REFERENCES npidetails(npi),
     address_type_id INTEGER REFERENCES address_type_lut(id),
@@ -120,7 +111,7 @@ CREATE TABLE npi_addresses (
 );
 
 -- Phone Numbers
-CREATE TABLE npi_phones (
+CREATE TABLE npi_phone (
     id SERIAL PRIMARY KEY,
     npi VARCHAR(10) REFERENCES npidetails(npi),
     phone_type_id INTEGER REFERENCES phone_type_lut(id),
@@ -129,7 +120,7 @@ CREATE TABLE npi_phones (
 );
 
 -- Taxonomy Entries
-CREATE TABLE npi_taxonomies (
+CREATE TABLE npi_taxonomy (
     id SERIAL PRIMARY KEY,
     npi VARCHAR(10) REFERENCES npidetails(npi),
     taxonomy_code VARCHAR(10),
@@ -148,3 +139,4 @@ CREATE TABLE npi_identifiers (
     state_id INTEGER REFERENCES state_code_lut(id),
     issuer VARCHAR(80)
 );
+
