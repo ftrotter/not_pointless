@@ -1,3 +1,5 @@
+-- normalized version of data from NPPES (National Plan and Provider Enumeration System) 
+-- from https://download.cms.gov/nppes/NPI_Files.html
 -- NPI Core Entity Table
 CREATE TABLE npidetail (
     npi BIGINT PRIMARY KEY,
@@ -41,7 +43,11 @@ CREATE TABLE npi_organization (
     is_org_subpart BOOLEAN,
 );
 
-
+-- identifier type lookup table
+CREATE TABLE identifier_type_lut (
+    id SERIAL PRIMARY KEY,
+    identifier_type_description TEXT UNIQUE NOT NULL
+);
 
 
 -- Identifiers
@@ -49,7 +55,7 @@ CREATE TABLE npi_identifier (
     id SERIAL PRIMARY KEY,
     npi BIGINT REFERENCES npidetails(npi),
     identifier VARCHAR(21),
-    type_code VARCHAR(3),
+    identifier_type_code INTEGER REFERENCES identifier_type_lut(id),
     state VARCHAR(3),
     issuer VARCHAR(81)
 );
@@ -58,18 +64,19 @@ CREATE TABLE npi_identifier (
 -- Lookup: Address Type
 CREATE TABLE address_type_lut (
     id SERIAL PRIMARY KEY,
-    description TEXT UNIQUE NOT NULL
+    address_type_description TEXT UNIQUE NOT NULL
 );
 
 INSERT INTO address_type_lut (description) VALUES
     ('mailing_address_main'),
     ('practice_location_main'),
-    ('secondary_practice_location');
+    ('secondary_practice_location'),
+    ('endpoint_address');
 
 -- Lookup: Phone Type
 CREATE TABLE phone_type_lut (
     id SERIAL PRIMARY KEY,
-    description TEXT UNIQUE NOT NULL
+    phone_type_description TEXT UNIQUE NOT NULL
 );
 
 INSERT INTO phone_type_lut (description) VALUES
@@ -88,12 +95,39 @@ CREATE TABLE state_code_lut (
     state_name VARCHAR(100) NOT NULL
 );
 
+-- Lookup: Organization Name Types
+CREATE TABLE orgname_type_lut (
+    id SERIAL PRIMARY KEY,
+    orgname_description TEXT UNIQUE NOT NULL,
+    source_file TEXT NOT NULL,
+    source_field TEXT NOT NULL
+);
+
+INSERT INTO orgname_type_lut (orgname_description, source_file, source_field) VALUES
+    -- From Other Name Reference File
+    ('Doing Business As (DBA) Name', 'Other Name Reference File', 'Other Organization Name Type Code'),
+    ('Former Legal Business Name', 'Other Name Reference File', 'Other Organization Name Type Code'),
+    ('Other Name', 'Other Name Reference File', 'Other Organization Name Type Code'),
+    ('Other', 'Other Name Reference File', 'Other Organization Name Type Code'),
+
+    -- From Endpoint Reference File
+    ('Endpoint Affiliated Legal Business Name', 'Endpoint Reference File', 'Affiliated Legal Business Name'),
+    ('Endpoint Organization Affiliation', 'Endpoint Reference File', 'Affiliation'),
+    ('Endpoint Contact Name', 'Endpoint Reference File', 'Contact Name'),
+
+    -- From Base NPPES File
+    ('Primary Legal Business Name', 'NPPES Core File', 'Provider Organization Name (Legal Business Name)'),
+
+    -- From Deactivation/Subpart fields
+    ('Parent Organization', 'NPPES Core File', 'Parent Organization LBN'),
+    ('Subpart Organization', 'NPPES Core File', 'Is Subpart');
+
 -- Organization Alternate Names
 CREATE TABLE orgname (
     id SERIAL PRIMARY KEY,
     npi BIGINT REFERENCES npidetails(npi),
     organization_name VARCHAR(70),
-    type_code VARCHAR(2),
+    orgname_type_code INTEGER REFERENCES orgname_type_lut(id),
     code_description VARCHAR(100)
 );
 
@@ -140,3 +174,26 @@ CREATE TABLE npi_identifiers (
     issuer VARCHAR(80)
 );
 
+CREATE TABLE npi_endpoints (
+    id SERIAL PRIMARY KEY,
+    npi VARCHAR(10) NOT NULL REFERENCES npidetails(npi),
+    endpoint_type TEXT,                             -- E.g., Direct Messaging, FHIR, etc.
+    endpoint_type_description TEXT,
+    endpoint TEXT,                                  -- The actual URL or address
+    affiliation TEXT,                               -- Relationship to the NPI
+    affiliation_legal_business_name TEXT,
+    use TEXT,                                       -- E.g., 'Work', 'Home'
+    use_description TEXT,
+    content_type TEXT,                              -- E.g., application/fhir+json
+    content_type_description TEXT,
+    content_other TEXT,                             -- When 'Other' is specified
+    address_line_1 TEXT,
+    address_line_2 TEXT,
+    city TEXT,
+    state_id INTEGER REFERENCES state_code_lut(id),
+    postal_code TEXT,
+    country_code TEXT,
+    endpoint_description TEXT,
+    endpoint_comments TEXT,
+    last_updated DATE
+);
