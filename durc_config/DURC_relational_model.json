@@ -1,0 +1,71 @@
+{
+  "not_pointless": {
+    "endpoint": {
+      "table_name": "endpoint",
+      "db": "not_pointless",
+      "column_data": [
+        {
+          "column_name": "id",
+          "data_type": "int",
+          "is_primary_key": true,
+          "is_foreign_key": false,
+          "is_linked_key": false,
+          "foreign_db": null,
+          "foreign_table": null,
+          "is_nullable": false,
+          "default_value": null,
+          "is_auto_increment": false
+        },
+        {
+          "column_name": "endpoint_url",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "is_linked_key": false,
+          "foreign_db": null,
+          "foreign_table": null,
+          "is_nullable": true,
+          "default_value": null,
+          "is_auto_increment": false
+        },
+        {
+          "column_name": "domain_name",
+          "data_type": "text",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "is_linked_key": false,
+          "foreign_db": null,
+          "foreign_table": null,
+          "is_nullable": true,
+          "default_value": null,
+          "is_auto_increment": false
+        },
+        {
+          "column_name": "created_at",
+          "data_type": "timestamp",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "is_linked_key": false,
+          "foreign_db": null,
+          "foreign_table": null,
+          "is_nullable": true,
+          "default_value": "CURRENT_TIMESTAMP",
+          "is_auto_increment": false
+        },
+        {
+          "column_name": "updated_at",
+          "data_type": "timestamp",
+          "is_primary_key": false,
+          "is_foreign_key": false,
+          "is_linked_key": false,
+          "foreign_db": null,
+          "foreign_table": null,
+          "is_nullable": true,
+          "default_value": "CURRENT_TIMESTAMP",
+          "is_auto_increment": false
+        }
+      ],
+      "create_table_sql": "CREATE TABLE not_pointless.endpoint (\n  id integer NOT NULL,\n  endpoint_url text,\n  domain_name text,\n  created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,\n  updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,\n  PRIMARY KEY (id)\n)"
+    }
+  }
+}
