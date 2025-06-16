@@ -1,9 +1,9 @@
 from django.db import connections, connection
 from django.db.utils import OperationalError
 from django.core.management.base import CommandError
-from .DURC_data_type_mapper import DURC_DataTypeMapper
+from .data_type_mapper import DURC_DataTypeMapper
 
-class RelationalModelExtractor:
+class DURC_RelationalModelExtractor:
     """
     Utility class for extracting relational model information from database schemas.
     """
@@ -91,7 +91,7 @@ class RelationalModelExtractor:
                         if current_table.startswith('_'):
                             continue
                         
-                        table_info = RelationalModelExtractor._process_table(
+                        table_info = DURC_RelationalModelExtractor._process_table(
                             conn, cursor, db_name, schema_name, current_table, all_tables, stdout_writer, style
                         )
                         
@@ -184,18 +184,18 @@ class RelationalModelExtractor:
             }
         
         # Construct a simplified CREATE TABLE statement
-        create_table_sql = RelationalModelExtractor._generate_create_table_sql(
+        create_table_sql = DURC_RelationalModelExtractor._generate_create_table_sql(
             schema_name, table, columns_data, primary_keys, foreign_keys
         )
         
         # Process columns
-        column_data = RelationalModelExtractor._process_columns(
+        column_data = DURC_RelationalModelExtractor._process_columns(
             columns_data, primary_keys, foreign_key_columns, foreign_keys, 
             db_name, schema_name, table, all_tables, cursor, stdout_writer, style
         )
         
         # Process relationships
-        has_many, belongs_to = RelationalModelExtractor._process_relationships(
+        has_many, belongs_to = DURC_RelationalModelExtractor._process_relationships(
             column_data, foreign_keys, db_name, schema_name, table, cursor, stdout_writer, style
         )
         
@@ -304,13 +304,13 @@ class RelationalModelExtractor:
                 foreign_table = foreign_keys[col_name]['table']
             elif is_linked_key and not is_foreign:
                 # Try pattern-based relationship detection
-                foreign_db, foreign_table = RelationalModelExtractor._detect_pattern_based_relationship(
+                foreign_db, foreign_table = DURC_RelationalModelExtractor._detect_pattern_based_relationship(
                     col_name, db_name, schema_name, table, all_tables, cursor, foreign_keys, stdout_writer, style
                 )
                 
                 if not foreign_table:
                     # Try standard linked key detection
-                    foreign_db, foreign_table = RelationalModelExtractor._detect_linked_key_relationship(
+                    foreign_db, foreign_table = DURC_RelationalModelExtractor._detect_linked_key_relationship(
                         col_name, db_name, schema_name, cursor, foreign_keys, stdout_writer, style
                     )
             

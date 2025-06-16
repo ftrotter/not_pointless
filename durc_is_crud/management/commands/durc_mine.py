@@ -1,8 +1,8 @@
 import os
 import json
 from django.core.management.base import BaseCommand, CommandError
-from .durc_mine_utils.DURC_include_pattern_parser import DURC_IncludePatternParser
-from .durc_mine_utils.DURC_relational_model_extractor import DURC_RelationalModelExtractor
+from .durc_utils.include_pattern_parser import DURC_IncludePatternParser
+from .durc_utils.relational_model_extractor import DURC_RelationalModelExtractor
 
 class Command(BaseCommand):
     help = 'Mine database schema and generate DURC relational model JSON'

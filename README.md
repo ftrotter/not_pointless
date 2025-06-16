@@ -1,34 +1,62 @@
-# Not Pointless
+# DURC Is CRUD
 
-A Django web application for managing API endpoints.
+DURC (Database to CRUD) is a Django package that helps you generate CRUD (Create, Read, Update, Delete) operations from your database schema.
 
-## Database Connection Testing
+## Features
 
-To test if the database connection is working:
+- **durc_mine**: Extract relational model information from your database
+- **durc_compile**: Generate code artifacts from the relational model (coming soon)
+
+## Installation
 
 ```bash
-python manage.py test_db_connection
+pip install durc_is_crud
 ```
 
-This command:
+## Usage
 
-- Tests PostgreSQL connection
-- Checks access to the `not_pointless.endpoint` table
-- Shows record count and sample data
-- Provides troubleshooting info if connection fails
+Add `durc_is_crud` to your `INSTALLED_APPS` in your Django settings:
 
-## Checkpoint
+```python
+INSTALLED_APPS = [
+    # ...
+    'durc_is_crud',
+    # ...
+]
+```
 
-- working without VPC and the database credentials are loading from the AWS secret system correctly
+### Mining your database
 
-## Setting up the AWS environment
+To extract the relational model from your database:
 
-Will move to a terraform script shortly.
+```bash
+python manage.py durc_mine --include your_db.your_schema.your_table
+```
 
-* First create the VPC, with two subnets.
-* Create an internet gateway and attach it to the VPC
-* Then create the RDS, which requires a VPC with two subnets
-* Create a new Security Group and allow IP access from your IP to the RDS server
-* You should have an Internet Gateway within your VPC configure a new route that goes to 0.0.0.0 that has the destination of the Internet Gateway for your VPC
-* then add the app runner instance and make sure you choose all subnets when you setup the VPC connection
-  
+This will generate a JSON file at `durc_config/DURC_relational_model.json` containing the relational model information.
+
+You can specify a custom output path:
+
+```bash
+python manage.py durc_mine --include your_db.your_schema.your_table --output_json_file path/to/output.json
+```
+
+### Compiling code artifacts (Coming Soon)
+
+Once you have generated the relational model, you can compile it into code artifacts:
+
+```bash
+python manage.py durc_compile
+```
+
+This will generate code artifacts in the `durc_generated` directory.
+
+You can specify custom input and output paths:
+
+```bash
+python manage.py durc_compile --input_json_file path/to/input.json --output_dir path/to/output
+```
+
+## License
+
+MIT

@@ -1,1 +1,9 @@
 # This file makes the durc_mine_utils directory a Python package
+from .DURC_data_type_mapper import DURC_DataTypeMapper
+from .DURC_include_pattern_parser import DURC_IncludePatternParser
+from .DURC_relational_model_extractor import DURC_RelationalModelExtractor
+
+# For backward compatibility
+from .DURC_data_type_mapper import DURC_DataTypeMapper as DataTypeMapper
+from .DURC_include_pattern_parser import DURC_IncludePatternParser as IncludePatternParser
+from .DURC_relational_model_extractor import DURC_RelationalModelExtractor as RelationalModelExtractor
