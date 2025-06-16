@@ -214,48 +214,37 @@ class Command(BaseCommand):
                                 'column': fk_target_col
                             }
                         
-                        # Try to get the CREATE TABLE SQL using pg_get_ddl if available
-                        try:
-                            cursor.execute(f"""
-                                SELECT pg_get_ddl('TABLE', '{schema_name + "." if schema_name else ""}{table}')
-                            """)
-                            create_table_sql = cursor.fetchone()[0]
-                        except Exception as e:
-                            # If pg_get_ddl is not available, construct a simplified CREATE TABLE statement
-                            self.stdout.write(self.style.WARNING(f"Could not get CREATE TABLE SQL using pg_get_ddl: {e}"))
-                            self.stdout.write(self.style.WARNING(f"Constructing simplified CREATE TABLE statement for {table}"))
+                        # Construct a simplified CREATE TABLE statement
+                        create_table_parts = [f"CREATE TABLE {schema_name + '.' if schema_name else ''}{table} ("]
+                        column_parts = []
+                        
+                        for col_name, data_type, is_nullable, default_value in columns_data:
+                            col_def = f"  {col_name} {data_type}"
                             
-                            # Get column information for constructing CREATE TABLE
-                            create_table_parts = [f"CREATE TABLE {schema_name + '.' if schema_name else ''}{table} ("]
-                            column_parts = []
+                            if not is_nullable == 'YES':
+                                col_def += " NOT NULL"
                             
-                            for col_name, data_type, is_nullable, default_value in columns_data:
-                                col_def = f"  {col_name} {data_type}"
-                                
-                                if not is_nullable == 'YES':
-                                    col_def += " NOT NULL"
-                                
-                                if default_value:
-                                    col_def += f" DEFAULT {default_value}"
-                                
-                                column_parts.append(col_def)
+                            if default_value:
+                                col_def += f" DEFAULT {default_value}"
                             
-                            # Add primary key constraint if any
-                            if primary_keys:
-                                column_parts.append(f"  PRIMARY KEY ({', '.join(primary_keys)})")
-                            
-                            # Add foreign key constraints
-                            for fk_col, fk_info in foreign_keys.items():
-                                # Use the current schema for references if the foreign key is in the same schema
-                                ref_schema = schema_name if fk_info['schema'] == 'public' else fk_info['schema']
-                                column_parts.append(
-                                    f"  FOREIGN KEY ({fk_col}) REFERENCES {ref_schema}.{fk_info['table']}({fk_info['column']})"
-                                )
-                            
-                            create_table_parts.append(',\n'.join(column_parts))
-                            create_table_parts.append(")")
-                            
-                            create_table_sql = '\n'.join(create_table_parts)
+                            column_parts.append(col_def)
+                        
+                        # Add primary key constraint if any
+                        if primary_keys:
+                            column_parts.append(f"  PRIMARY KEY ({', '.join(primary_keys)})")
+                        
+                        # Add foreign key constraints
+                        for fk_col, fk_info in foreign_keys.items():
+                            # Use the current schema for references if the foreign key is in the same schema
+                            ref_schema = schema_name if fk_info['schema'] == 'public' else fk_info['schema']
+                            column_parts.append(
+                                f"  FOREIGN KEY ({fk_col}) REFERENCES {ref_schema}.{fk_info['table']}({fk_info['column']})"
+                            )
+                        
+                        create_table_parts.append(',\n'.join(column_parts))
+                        create_table_parts.append(")")
+                        
+                        create_table_sql = '\n'.join(create_table_parts)
                         
                         # Process columns
                         column_data = []
