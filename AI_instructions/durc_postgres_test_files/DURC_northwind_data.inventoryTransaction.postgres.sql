@@ -21,11 +21,11 @@ CREATE INDEX "inventoryTransaction_purchaseOrder_id_idx" ON "inventoryTransactio
 CREATE INDEX "inventoryTransaction_transactionType_idx" ON "inventoryTransaction" ("transactionType");
 
 ALTER TABLE "inventoryTransaction" ADD CONSTRAINT "fkInventoryTransactionInventoryTransactionType1" 
-  FOREIGN KEY ("transactionType") REFERENCES "northwind_model"."inventoryTransactionType" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY ("transactionType") REFERENCES "durc_northwind_model"."inventoryTransactionType" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "inventoryTransaction" ADD CONSTRAINT "fkInventoryTransactionOrder1" 
   FOREIGN KEY ("customerOrder_id") REFERENCES "order" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "inventoryTransaction" ADD CONSTRAINT "fkInventoryTransactionProducts1" 
-  FOREIGN KEY (product_id) REFERENCES "northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (product_id) REFERENCES "durc_northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "inventoryTransaction" ADD CONSTRAINT "fkInventoryTransactionPurchaseOrder1" 
   FOREIGN KEY ("purchaseOrder_id") REFERENCES "purchaseOrder" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 

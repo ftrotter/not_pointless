@@ -24,11 +24,11 @@ CREATE INDEX "fkOrderDetailOrder1_idx" ON "orderDetail" (order_id);
 CREATE INDEX "fkOrderDetailOrderDetailStatus1_idx" ON "orderDetail" (status_id);
 
 ALTER TABLE "orderDetail" ADD CONSTRAINT "fkOrderDetailOrder1" 
-  FOREIGN KEY (order_id) REFERENCES "northwind_model"."order" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (order_id) REFERENCES "durc_northwind_model"."order" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "orderDetail" ADD CONSTRAINT "fkOrderDetailOrderDetailStatus1" 
-  FOREIGN KEY (status_id) REFERENCES "northwind_model"."orderDetailStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (status_id) REFERENCES "durc_northwind_model"."orderDetailStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "orderDetail" ADD CONSTRAINT "fkOrderDetailProducts1" 
-  FOREIGN KEY (product_id) REFERENCES "northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (product_id) REFERENCES "durc_northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table "orderDetail"

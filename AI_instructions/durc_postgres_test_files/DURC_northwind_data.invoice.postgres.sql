@@ -16,7 +16,7 @@ CREATE TABLE "invoice" (
 CREATE INDEX invoice_id_idx ON "invoice" (id);
 CREATE INDEX "fkInvoicesOrder1_idx" ON "invoice" (order_id);
 ALTER TABLE "invoice" ADD CONSTRAINT "fkInvoicesOrder1" 
-  FOREIGN KEY (order_id) REFERENCES "northwind_model"."order" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (order_id) REFERENCES "durc_northwind_model"."order" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table "invoice"

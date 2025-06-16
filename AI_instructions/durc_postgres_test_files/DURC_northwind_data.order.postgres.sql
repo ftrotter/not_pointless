@@ -35,15 +35,15 @@ CREATE INDEX order_shipZipPostalCode_idx ON "order" ("shipZipPostalCode");
 CREATE INDEX "fkOrderOrderStatus1_idx" ON "order" (status_id);
 
 ALTER TABLE "order" ADD CONSTRAINT "fkOrderCustomers" 
-  FOREIGN KEY (customer_id) REFERENCES "northwind_model".customer (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (customer_id) REFERENCES "durc_northwind_model".customer (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "order" ADD CONSTRAINT "fkOrderEmployees1" 
-  FOREIGN KEY (employee_id) REFERENCES "northwind_model".employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (employee_id) REFERENCES "durc_northwind_model".employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "order" ADD CONSTRAINT "fkOrderOrderStatus1" 
-  FOREIGN KEY (status_id) REFERENCES "northwind_model"."orderStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (status_id) REFERENCES "durc_northwind_model"."orderStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "order" ADD CONSTRAINT "fkOrderOrderTaxStatus1" 
-  FOREIGN KEY ("taxStatus_id") REFERENCES "northwind_model"."orderTaxStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY ("taxStatus_id") REFERENCES "durc_northwind_model"."orderTaxStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "order" ADD CONSTRAINT "fkOrderShippers1" 
-  FOREIGN KEY (shipper_id) REFERENCES "northwind_model".shipper (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (shipper_id) REFERENCES "durc_northwind_model".shipper (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table "order"

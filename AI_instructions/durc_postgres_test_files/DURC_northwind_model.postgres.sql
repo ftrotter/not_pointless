@@ -1,3 +1,6 @@
+SET search_path TO durc_northwind_model;
+
+
 --
 -- PostgreSQL database dump
 -- Converted from MySQL
@@ -7,7 +10,7 @@
 -- Table structure for table appstring
 --
 
-DROP TABLE IF EXISTS appstring;
+DROP TABLE IF EXISTS appstring CASCADE ;
 CREATE TABLE appstring (
   id SERIAL PRIMARY KEY,
   "stringData" varchar(255) DEFAULT NULL
@@ -23,7 +26,7 @@ INSERT INTO appstring VALUES (2,'Northwind Traders'),(3,'Cannot remove posted in
 -- Table structure for table customer
 --
 
-DROP TABLE IF EXISTS customer;
+DROP TABLE IF EXISTS customer CASCADE;
 CREATE TABLE customer (
   id SERIAL PRIMARY KEY,
   "companyName" varchar(50) DEFAULT NULL,
@@ -60,13 +63,13 @@ CREATE INDEX customer_stateProvince_idx ON customer ("stateProvince");
 -- Dumping data for table customer
 --
 
-INSERT INTO customer VALUES (1,'Company A','Bedecs','Anna',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 1st Street','Seattle','WA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(2,'Company B','Gratacos Solsona','Antonio',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 2nd Street','Boston','MA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(3,'Company C','Axen','Thomas',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','123 3rd Street','Los Angelas','CA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(4,'Company D','Lee','Christina',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 4th Street','New York','NY','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(5,'Company E','O''Donnell','Martin',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 5th Street','Minneapolis','MN','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(6,'Company F','Pérez-Olaeta','Francisco',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 6th Street','Milwaukee','WI','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(7,'Company G','Xie','Ming-Yang',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 7th Street','Boise','ID','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(8,'Company H','Andersen','Elizabeth',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','123 8th Street','Portland','OR','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(9,'Company I','Mortensen','Sven',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 9th Street','Salt Lake City','UT','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(10,'Company J','Wacker','Roland',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 10th Street','Chicago','IL','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(11,'Company K','Krschne','Peter',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 11th Street','Miami','FL','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(12,'Company L','Edwards','John',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 12th Street','Las Vegas','NV','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(13,'Company M','Ludick','Andre',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 13th Street','Memphis','TN','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(14,'Company N','Grilo','Carlos',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 14th Street','Denver','CO','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(15,'Company O','Kupkova','Helena',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','456 15th Street','Honolulu','HI','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(16,'Company P','Goldschmidt','Daniel',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 16th Street','San Francisco','CA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(17,'Company Q','Bagel','Jean Philippe',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','456 17th Street','Seattle','WA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(18,'Company R','Autier Miconi','Catherine',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 18th Street','Boston','MA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(19,'Company S','Eggerer','Alexander',NULL,'Accounting Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 19th Street','Los Angelas','CA','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(20,'Company T','Li','George',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 20th Street','New York','NY','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(21,'Company U','Tham','Bernard',NULL,'Accounting Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 21th Street','Minneapolis','MN','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(22,'Company V','Ramos','Luciana',NULL,'Purchasing Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 22th Street','Milwaukee','WI','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(23,'Company W','Entin','Michael',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 23th Street','Portland','OR','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(24,'Company X','Hasselberg','Jonas',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','789 24th Street','Salt Lake City','UT','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(25,'Company Y','Rodman','John',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 25th Street','Chicago','IL','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(26,'Company Z','Liu','Run',NULL,'Accounting Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 26th Street','Miami','FL','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(27,'Company AA','Toh','Karen',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 27th Street','Las Vegas','NV','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(28,'Company BB','Raghav','Amritansh',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 28th Street','Memphis','TN','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00'),(29,'Company CC','Lee','Soo Jung',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 29th Street','Denver','CO','99999','USA',NULL,NULL,'','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00','0000-00-00 00:00:00');
+INSERT INTO customer VALUES (1,'Company A','Bedecs','Anna',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 1st Street','Seattle','WA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(2,'Company B','Gratacos Solsona','Antonio',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 2nd Street','Boston','MA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(3,'Company C','Axen','Thomas',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','123 3rd Street','Los Angelas','CA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(4,'Company D','Lee','Christina',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 4th Street','New York','NY','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(5,'Company E','O''Donnell','Martin',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 5th Street','Minneapolis','MN','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(6,'Company F','Pérez-Olaeta','Francisco',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 6th Street','Milwaukee','WI','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(7,'Company G','Xie','Ming-Yang',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','123 7th Street','Boise','ID','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(8,'Company H','Andersen','Elizabeth',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','123 8th Street','Portland','OR','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(9,'Company I','Mortensen','Sven',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 9th Street','Salt Lake City','UT','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(10,'Company J','Wacker','Roland',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 10th Street','Chicago','IL','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(11,'Company K','Krschne','Peter',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 11th Street','Miami','FL','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(12,'Company L','Edwards','John',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','123 12th Street','Las Vegas','NV','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(13,'Company M','Ludick','Andre',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 13th Street','Memphis','TN','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(14,'Company N','Grilo','Carlos',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 14th Street','Denver','CO','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(15,'Company O','Kupkova','Helena',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','456 15th Street','Honolulu','HI','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(16,'Company P','Goldschmidt','Daniel',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 16th Street','San Francisco','CA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(17,'Company Q','Bagel','Jean Philippe',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','456 17th Street','Seattle','WA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(18,'Company R','Autier Miconi','Catherine',NULL,'Purchasing Representative','(123)555-0100',NULL,NULL,'(123)555-0101','456 18th Street','Boston','MA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(19,'Company S','Eggerer','Alexander',NULL,'Accounting Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 19th Street','Los Angelas','CA','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(20,'Company T','Li','George',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 20th Street','New York','NY','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(21,'Company U','Tham','Bernard',NULL,'Accounting Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 21th Street','Minneapolis','MN','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(22,'Company V','Ramos','Luciana',NULL,'Purchasing Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 22th Street','Milwaukee','WI','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(23,'Company W','Entin','Michael',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 23th Street','Portland','OR','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(24,'Company X','Hasselberg','Jonas',NULL,'Owner','(123)555-0100',NULL,NULL,'(123)555-0101','789 24th Street','Salt Lake City','UT','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(25,'Company Y','Rodman','John',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 25th Street','Chicago','IL','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(26,'Company Z','Liu','Run',NULL,'Accounting Assistant','(123)555-0100',NULL,NULL,'(123)555-0101','789 26th Street','Miami','FL','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(27,'Company AA','Toh','Karen',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 27th Street','Las Vegas','NV','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(28,'Company BB','Raghav','Amritansh',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 28th Street','Memphis','TN','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01'),(29,'Company CC','Lee','Soo Jung',NULL,'Purchasing Manager','(123)555-0100',NULL,NULL,'(123)555-0101','789 29th Street','Denver','CO','99999','USA',NULL,NULL,'','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01','1900-01-01 01:01:01');
 
 --
 -- Table structure for table employee
 --
 
-DROP TABLE IF EXISTS employee;
+DROP TABLE IF EXISTS employee CASCADE;
 CREATE TABLE employee (
   id SERIAL PRIMARY KEY,
   company varchar(50) DEFAULT NULL,
@@ -105,7 +108,7 @@ INSERT INTO employee VALUES (1,'Northwind Traders','Freehafer','Nancy','nancy@no
 -- Table structure for table "employeePrivilege"
 --
 
-DROP TABLE IF EXISTS "employeePrivilege";
+DROP TABLE IF EXISTS "employeePrivilege" CASCADE ;
 CREATE TABLE "employeePrivilege" (
   employee_id integer NOT NULL,
   privilege_id integer NOT NULL,
@@ -115,10 +118,7 @@ CREATE TABLE "employeePrivilege" (
 CREATE INDEX "employeePrivilege_employee_id_idx" ON "employeePrivilege" (employee_id);
 CREATE INDEX "employeePrivilege_privilege_id_idx" ON "employeePrivilege" (privilege_id);
 
-ALTER TABLE "employeePrivilege" ADD CONSTRAINT "fkEmployeePrivilegeEmployees1" 
-  FOREIGN KEY (employee_id) REFERENCES employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE "employeePrivilege" ADD CONSTRAINT "fkEmployeePrivilegePrivilege1" 
-  FOREIGN KEY (privilege_id) REFERENCES privilege (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 
 --
 -- Dumping data for table "employeePrivilege"
@@ -130,7 +130,7 @@ INSERT INTO "employeePrivilege" VALUES (2,2);
 -- Table structure for table "inventoryTransactionType"
 --
 
-DROP TABLE IF EXISTS "inventoryTransactionType";
+DROP TABLE IF EXISTS "inventoryTransactionType" CASCADE ;
 CREATE TABLE "inventoryTransactionType" (
   id smallint NOT NULL PRIMARY KEY,
   "typeName" varchar(50) NOT NULL
@@ -146,7 +146,7 @@ INSERT INTO "inventoryTransactionType" VALUES (1,'Purchased'),(2,'Sold'),(3,'On 
 -- Table structure for table "orderDetailStat"
 --
 
-DROP TABLE IF EXISTS "orderDetailStat";
+DROP TABLE IF EXISTS "orderDetailStat" CASCADE;
 CREATE TABLE "orderDetailStat" (
   id integer NOT NULL PRIMARY KEY,
   "statusName" varchar(50) NOT NULL
@@ -162,7 +162,7 @@ INSERT INTO "orderDetailStat" VALUES (0,'None'),(1,'Allocated'),(2,'Invoiced'),(
 -- Table structure for table "orderStat"
 --
 
-DROP TABLE IF EXISTS "orderStat";
+DROP TABLE IF EXISTS "orderStat" CASCADE;
 CREATE TABLE "orderStat" (
   id smallint NOT NULL PRIMARY KEY,
   "statusName" varchar(50) NOT NULL
@@ -178,7 +178,7 @@ INSERT INTO "orderStat" VALUES (0,'New'),(1,'Invoiced'),(2,'Shipped'),(3,'Closed
 -- Table structure for table "orderTaxStat"
 --
 
-DROP TABLE IF EXISTS "orderTaxStat";
+DROP TABLE IF EXISTS "orderTaxStat" CASCADE;
 CREATE TABLE "orderTaxStat" (
   id smallint NOT NULL PRIMARY KEY,
   "taxStatName" varchar(50) NOT NULL
@@ -194,7 +194,7 @@ INSERT INTO "orderTaxStat" VALUES (0,'Tax Exempt'),(1,'Taxable');
 -- Table structure for table privilege
 --
 
-DROP TABLE IF EXISTS privilege;
+DROP TABLE IF EXISTS privilege CASCADE;
 CREATE TABLE privilege (
   id SERIAL PRIMARY KEY,
   "privilegeName" varchar(50) DEFAULT NULL
@@ -210,7 +210,7 @@ INSERT INTO privilege VALUES (2,'Purchase Approvals');
 -- Table structure for table product
 --
 
-DROP TABLE IF EXISTS product;
+DROP TABLE IF EXISTS product CASCADE;
 CREATE TABLE product (
   supplier_ids text DEFAULT NULL,
   id SERIAL PRIMARY KEY,
@@ -234,4 +234,52 @@ CREATE INDEX product_productCode_idx ON product ("productCode");
 -- Dumping data for table product
 --
 
-INSERT INTO product VALUES ('4',1,'NWTB-1','Northwind Traders Chai',NULL,13.5000,18.0000,10,40,'10 boxes x 20 bags',false,10,'Beverages',''),('10',3,'NWTCO-3','Northwind Traders Syrup',NULL,7.5000,10.0000,25,100,'12 - 550 ml bottles',false,25,'Condiments',''),('10',4,'NWTCO-4','Northwind Traders Cajun Seasoning',NULL,16.5000,22.0000,10,40,'48 - 6 oz jars',false,10,'Condiments',''),('10',5,'NWTO-5','Northwind Traders Olive Oil',NULL,16.0125,21.3500,10,40,'36 boxes',false,10,'Oil',''),('2;6',6,'NWTJP-6','Northwind Traders Boysenberry Spread',NULL,18.7500,25.0000,25,100,'12 - 8 oz jars',false,25,'Jams, Preserves',''),('2',7,'NWTDFN-7','Northwind Traders Dried Pears',NULL,22.5000,30.0000,10,40,'12 - 1 lb pkgs.',false,10,'Dried Fruit & Nuts',''),('8',8,'NWTS-8','Northwind Traders Curry Sauce',NULL,30.0000,40.0000,10,40,'12 - 12 oz jars',false,10,'Sauces',''),('2;6',14,'NWTDFN-14','Northwind Traders Walnuts',NULL,17.4375,23.2500,10,40,'40 - 100 g pkgs.',false,10,'Dried Fruit & Nuts',''),('6',17,'NWTCFV-17','Northwind Traders Fruit Cocktail',NULL,29.2500,39.0000,10,40,'15.25 OZ',false,10,'Canned Fruit & Vegetables',''),('1',19,'NWTBGM-19','Northwind Traders Chocolate Biscuits Mix',NULL,6.9000,9.2000,5,20,'10 boxes x 12 pieces',false,5,'Baked Goods & Mixes',''),('2;6',20,'NWTJP-6','Northwind Traders Marmalade',NULL,60.7500,81.0000,10,40,'30 gift boxes',false,10,'Jams, Preserves',''),('1',21,'NWTBGM-21','Northwind Traders Scones',NULL,7.5000,10.0000,5,20,'24 pkgs. x 4 pieces',false,5,'Baked Goods & Mixes',''),('4',34,'NWTB-34','Northwind Traders Beer',NULL,10.5000,14.0000,15,60,'24 - 12 oz bottles',false,15,'Beverages',''),('7',40,'NWTCM-40','Northwind Traders Crab Meat',NULL,13.8000,18.4000,30,120,'24 - 4 oz tins',false,30,'Canned Meat',''),('6',41,'NWTSO-41','Northwind Traders Clam Chowder',NULL,7.2375,9.6500,10,40,'12 - 12 oz cans',false,10,'Soups',''),('3;4',43,'NWTB-43','Northwind Traders Coffee',NULL,34.5000,46.0000,25,100,'16 - 500 g tins',false,25,'Beverages',''),('10',48,'NWTCA-48','Northwind Traders Chocolate',NULL,9.5625,12.7500,25,100,'10 pkgs',false,25,'Candy',''),('2',51,'NWTDFN-51','Northwind Traders Dried Apples',NULL,39.7500,53.0000,10,40,'50 - 300 g pkgs.',false,10,'Dried Fruit & Nuts',''),('1',52,'NWTG-52','Northwind Traders Long Grain Rice',NULL,5.2500,7.0000,25,100,'16 - 2 kg boxes',false,25,'Grains',''),('1',56,'NWTP-56','Northwind Traders Gnocchi',NULL,28.5000,38.0000,30,120,'24 - 250 g pkgs.',false,30,'Pasta',''),('1',57,'NWTP-57','Northwind Traders Ravioli',NULL,14.6250,19.5000,20,
+INSERT INTO product
+VALUES ('4', 1, 'NWTB-1', 'Northwind Traders Chai', NULL, 13.5000, 18.0000, 10, 40, '10 boxes x 20 bags', FALSE, 10,
+        'Beverages', ''),
+       ('10', 3, 'NWTCO-3', 'Northwind Traders Syrup', NULL, 7.5000, 10.0000, 25, 100, '12 - 550 ml bottles', FALSE, 25,
+        'Condiments', ''),
+       ('10', 4, 'NWTCO-4', 'Northwind Traders Cajun Seasoning', NULL, 16.5000, 22.0000, 10, 40, '48 - 6 oz jars',
+        FALSE, 10, 'Condiments', ''),
+       ('10', 5, 'NWTO-5', 'Northwind Traders Olive Oil', NULL, 16.0125, 21.3500, 10, 40, '36 boxes', FALSE, 10, 'Oil',
+        ''),
+       ('2;6', 6, 'NWTJP-6', 'Northwind Traders Boysenberry Spread', NULL, 18.7500, 25.0000, 25, 100, '12 - 8 oz jars',
+        FALSE, 25, 'Jams, Preserves', ''),
+       ('2', 7, 'NWTDFN-7', 'Northwind Traders Dried Pears', NULL, 22.5000, 30.0000, 10, 40, '12 - 1 lb pkgs.', FALSE,
+        10, 'Dried Fruit & Nuts', ''),
+       ('8', 8, 'NWTS-8', 'Northwind Traders Curry Sauce', NULL, 30.0000, 40.0000, 10, 40, '12 - 12 oz jars', FALSE, 10,
+        'Sauces', ''),
+       ('2;6', 14, 'NWTDFN-14', 'Northwind Traders Walnuts', NULL, 17.4375, 23.2500, 10, 40, '40 - 100 g pkgs.', FALSE,
+        10, 'Dried Fruit & Nuts', ''),
+       ('6', 17, 'NWTCFV-17', 'Northwind Traders Fruit Cocktail', NULL, 29.2500, 39.0000, 10, 40, '15.25 OZ', FALSE, 10,
+        'Canned Fruit & Vegetables', ''),
+       ('1', 19, 'NWTBGM-19', 'Northwind Traders Chocolate Biscuits Mix', NULL, 6.9000, 9.2000, 5, 20,
+        '10 boxes x 12 pieces', FALSE, 5, 'Baked Goods & Mixes', ''),
+       ('2;6', 20, 'NWTJP-6', 'Northwind Traders Marmalade', NULL, 60.7500, 81.0000, 10, 40, '30 gift boxes', FALSE, 10,
+        'Jams, Preserves', ''),
+       ('1', 21, 'NWTBGM-21', 'Northwind Traders Scones', NULL, 7.5000, 10.0000, 5, 20, '24 pkgs. x 4 pieces', FALSE, 5,
+        'Baked Goods & Mixes', ''),
+       ('4', 34, 'NWTB-34', 'Northwind Traders Beer', NULL, 10.5000, 14.0000, 15, 60, '24 - 12 oz bottles', FALSE, 15,
+        'Beverages', ''),
+       ('7', 40, 'NWTCM-40', 'Northwind Traders Crab Meat', NULL, 13.8000, 18.4000, 30, 120, '24 - 4 oz tins', FALSE,
+        30, 'Canned Meat', ''),
+       ('6', 41, 'NWTSO-41', 'Northwind Traders Clam Chowder', NULL, 7.2375, 9.6500, 10, 40, '12 - 12 oz cans', FALSE,
+        10, 'Soups', ''),
+       ('3;4', 43, 'NWTB-43', 'Northwind Traders Coffee', NULL, 34.5000, 46.0000, 25, 100, '16 - 500 g tins', FALSE, 25,
+        'Beverages', ''),
+       ('10', 48, 'NWTCA-48', 'Northwind Traders Chocolate', NULL, 9.5625, 12.7500, 25, 100, '10 pkgs', FALSE, 25,
+        'Candy', ''),
+       ('2', 51, 'NWTDFN-51', 'Northwind Traders Dried Apples', NULL, 39.7500, 53.0000, 10, 40, '50 - 300 g pkgs.',
+        FALSE, 10, 'Dried Fruit & Nuts', ''),
+       ('1', 52, 'NWTG-52', 'Northwind Traders Long Grain Rice', NULL, 5.2500, 7.0000, 25, 100, '16 - 2 kg boxes',
+        FALSE, 25, 'Grains', ''),
+       ('1', 56, 'NWTP-56', 'Northwind Traders Gnocchi', NULL, 28.5000, 38.0000, 30, 120, '24 - 250 g pkgs.', FALSE, 30,
+        'Pasta', '')
+;
+
+
+ALTER TABLE "employeePrivilege" ADD CONSTRAINT "fkEmployeePrivilegeEmployees1"
+  FOREIGN KEY (employee_id) REFERENCES employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE "employeePrivilege" ADD CONSTRAINT "fkEmployeePrivilegePrivilege1"
+  FOREIGN KEY (privilege_id) REFERENCES privilege (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+

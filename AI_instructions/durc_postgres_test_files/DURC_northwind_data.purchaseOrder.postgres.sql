@@ -28,11 +28,11 @@ CREATE INDEX purchaseorder_status_id_idx ON "purchaseOrder" (status_id);
 CREATE INDEX purchaseorder_supplier_id_idx ON "purchaseOrder" (supplier_id);
 
 ALTER TABLE "purchaseOrder" ADD CONSTRAINT "fkPurchaseOrderEmployees1" 
-  FOREIGN KEY ("createdBy_employee_id") REFERENCES "northwind_model".employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY ("createdBy_employee_id") REFERENCES "durc_northwind_model".employee (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "purchaseOrder" ADD CONSTRAINT "fkPurchaseOrderPurchaseOrderStatus1" 
-  FOREIGN KEY (status_id) REFERENCES "northwind_model"."purchaseOrderStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (status_id) REFERENCES "durc_northwind_model"."purchaseOrderStatus" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "purchaseOrder" ADD CONSTRAINT "fkPurchaseOrderSuppliers1" 
-  FOREIGN KEY (supplier_id) REFERENCES "northwind_model".supplier (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (supplier_id) REFERENCES "durc_northwind_model".supplier (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Dumping data for table "purchaseOrder"

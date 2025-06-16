@@ -22,7 +22,7 @@ CREATE INDEX purchaseorderdetail_product_id_idx ON "purchaseOrderDetail" (produc
 ALTER TABLE "purchaseOrderDetail" ADD CONSTRAINT "fkPurchaseOrderDetailInventoryTransaction1" 
   FOREIGN KEY (inventory_id) REFERENCES "inventoryTransaction" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "purchaseOrderDetail" ADD CONSTRAINT "fkPurchaseOrderDetailProducts1" 
-  FOREIGN KEY (product_id) REFERENCES "northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
+  FOREIGN KEY (product_id) REFERENCES "durc_northwind_model".product (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE "purchaseOrderDetail" ADD CONSTRAINT "fkPurchaseOrderDetailPurchaseOrder1" 
   FOREIGN KEY ("purchaseOrder_id") REFERENCES "purchaseOrder" (id) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
