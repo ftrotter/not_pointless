@@ -8,7 +8,7 @@ Overview
 
 DURC inspects one or more specified database structures and generates:
 
-1. Mine the underlying data models and relationships and write these to /durc_config/DURC_relational_model.json (see the AI_instructions/DURC_autogen.example.json for an example of how this should be structured)
+1. Mine the underlying data models and relationships and write these to /durc_config/DURC_relational_model.json (see the AI_instructions/DURC_simplified.example.json for an example of how this should be structured)
 2. From the DURC_relational_model.json generate the "Generated" Django models (safe to overwrite)
 3. From the DURC_relational_model.json generate the "Validated" model subclasses (customizable, never overwritten)
 4. From the DURC_relational_model.json generate ModelForm classes with enhanced widgets, that refer to the "Validated" model subclasses
@@ -21,7 +21,7 @@ Inputs
 
 DURC is executed as a command-line script with arguments:
 
-python durc.py --include mydb.schema1.table1 mydb.schema2 mydb
+python manage.py durc --include mydb.schema1.table1 mydb.schema2 mydb
 
 Input Interpretation:
 
@@ -36,10 +36,10 @@ Output File Structure
 
 myapp/
 ├── models/
-│   └── g_book.py            # Overwritten every time
-|   |__ v_book.py  # Only created once
+│   └── g_book.py               # Overwritten every time
+|   |__ v_book.py               # Only created once
 ├── forms/
-│   └── v_book_form.py       # Contains enhanced widgets and autosuggest
+│   └── v_book_form.py          # Contains enhanced widgets and autosuggest
 └── ...
 
 Code Generation Layers
