@@ -1,4 +1,5 @@
 # Relational Diagrams for Database Tables
+# Now in https://app.quickdatabasediagrams.com/#/d/yDhfcP
 
 ## Address Tables
 
