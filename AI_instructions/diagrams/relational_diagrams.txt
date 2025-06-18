@@ -211,12 +211,12 @@ Organization_id INT FK >- Organization.id
 
 Identifier_Type_LUT
 -----
-id SERIAL PK
+id  PK
 identifier_type_description TEXT UNIQUE
 
 NPI_Identifier
 -----
-id SERIAL PK
+id  PK
 npi BIGINT FK >- NPI.npi
 identifier VARCHAR(21)
 identifier_type_code INTEGER FK >- Identifier_Type_LUT.id
@@ -225,30 +225,30 @@ issuer VARCHAR(81)
 
 Address_Type_LUT
 -----
-id SERIAL PK
+id  PK
 address_type_description TEXT UNIQUE
 
 Phone_Type_LUT
 -----
-id SERIAL PK
+id  PK
 phone_type_description TEXT UNIQUE
 
 State_Code_LUT
 -----
-id SERIAL PK
+id  PK
 state_code VARCHAR(100) UNIQUE
 state_name VARCHAR(100)
 
 Orgname_Type_LUT
 -----
-id SERIAL PK
+id  PK
 orgname_description TEXT UNIQUE
 source_file TEXT
 source_field TEXT
 
 Orgname
 -----
-id SERIAL PK
+id  PK
 npi BIGINT FK >- NPI.npi
 organization_name VARCHAR(70)
 orgname_type_code INTEGER FK >- Orgname_Type_LUT.id
@@ -257,7 +257,7 @@ code_description VARCHAR(100)
 
 NPI_Phone
 -----
-id SERIAL PK
+id  PK
 npi BIGINT FK >- NPI.npi
 phone_type_id INTEGER FK >- Phone_Type_LUT.id
 phone_number VARCHAR(20)
@@ -265,7 +265,7 @@ is_fax BOOLEAN
 
 NPI_Taxonomy
 -----
-id SERIAL PK
+id  PK
 npi BIGINT FK >- NPI.npi
 NUCC_Taxonomy_Code_id INT FK >- NUCC_Taxonomy_Code.id
 license_number VARCHAR(20)
@@ -275,7 +275,7 @@ taxonomy_group VARCHAR(10)
 
 NPI_Identifiers
 -----
-id SERIAL PK
+id  PK
 npi BIGINT FK >- NPI.npi
 identifier VARCHAR(20)
 type_code VARCHAR(2)
@@ -284,18 +284,18 @@ issuer VARCHAR(80)
 
 NPI_Endpoint
 -----------
-id SERIAL PK 
+id  PK 
 npi BIGINT FK >- NPI.npi
 Endpoint_id INT FK >- Endpoint.id
 
 Endpoint_Type_LUT
 -----
-id INT SERIAL PK
+id INT  PK
 identifier_type_description TEXT UNIQUE
 
 Endpoint
 --------
-id INT SERIAL PK
+id INT  PK
 endpoint_url VARCHAR(500) # for now only FHIR and Direct
 endpoint_name VARCHAR(100) # endpoint NPPES file as endpoint_description
 endpoint_desc VARCHAR(100) # endpoint NPPES file as endpoint_comments
@@ -307,7 +307,7 @@ endpoint_type_id FK >- Endpoint_Type_LUT.id
 
 NUCC_Taxonomy_Code
 -----
-id SERIAL PK
+id  PK
 parent_nucc_taxonomy_code_id INT FK >0- NUCC_Taxonomy_Code.id
 taxonomy_code VARCHAR(10) UNIQUE
 tax_grouping TEXT
