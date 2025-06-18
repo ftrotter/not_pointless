@@ -125,34 +125,25 @@ notes TEXT
 
 ## NPPES Data Tables
 
-NPIDetail as npid
------
-npi BIGINT PK
-entity_type_code SMALLINT
-replacement_npi VARCHAR(11)
-enumeration_date DATE
-last_update_date DATE
-deactivation_reason_code VARCHAR(3)
-deactivation_date DATE
-reactivation_date DATE
-certification_date DATE
+
 
 Credential_LUT
 --------------------
-id
+id INT PK 
 Credential_acronym VARCHAR(20) # i.e. M.D.
 Credential_name VARCHAR(100) # i.e. Medical Doctor
 Credential_source_url VARCHAR(250) # for when there is only one source for the credential (unlike medical schools etc)
 
 IndividualToCredential
 --------
-id PK
+id PK int(10)
 Individual_id FK >- Individual.id 
 Credential_id FK >- Credential_LUT.id 
 
 
 Individual
 ---------
+id INT PK
 last_name VARCHAR(100)
 first_name VARCHAR(100)
 middle_name VARCHAR(21)
@@ -171,37 +162,51 @@ TrademarkSerialNumber VARCHAR(20)
 OrganizationToHealthcareBrand
 ------------------------
 id PK  int(10)
-HealthcareBrand_id FK >- HealthcareBrand.id 
-Organization_id FK >- Organization.id
+HealthcareBrand_id INT FK >- HealthcareBrand.id 
+Organization_id INT FK >- Organization.id
 
 
 OrganizationOtherName
 -----------------------
 id PK int(10)
-Organization_id >- Organization.id 
+Organization_id INT FK >- Organization.id 
+
 
 Organization
 -------------
 id PK int(10)
 org_legal_name VARCHAR(200)
-AuthorizedOfficial_Invidual_id FK >- Individual.id 
-ParentOrganization_id >- Organization.id 
+AuthorizedOfficial_Invidual_id INT FK >- Individual.id 
+ParentOrganization_id INT FK >- Organization.id 
 OrganizationTIN VARCHAR(10)
 OrganizationTIN_HASH VARCHAR(32)
 OrganizationGLIEF VARCHAR(300)
 
-
+NPI
+-----
+npi BIGINT PK
+entity_type_code SMALLINT
+replacement_npi VARCHAR(11)
+enumeration_date DATE
+last_update_date DATE
+deactivation_reason_code VARCHAR(3)
+deactivation_date DATE
+reactivation_date DATE
+certification_date DATE
 
 NPI_Individual
 -----
-npi BIGINT PK FK >- npid.npi
-Individual_id FK >- Individual.id 
+id INT PK 
+npi BIGINT FK >- NPI.npi
+Individual_id INT FK >- Individual.id 
 is_sole_proprietor BOOLEAN
 sex_code CHAR(1)
 
 NPI_Organization
 -----
-npi BIGINT PK FK >- npid.npi
+id INT PK 
+npi BIGINT FK >- NPI.npi
+Organization_id INT FK >- Organization.id
 
 
 Identifier_Type_LUT
@@ -212,7 +217,7 @@ identifier_type_description TEXT UNIQUE
 NPI_Identifier
 -----
 id SERIAL PK
-npi BIGINT FK >- npid.npi
+npi BIGINT FK >- NPI.npi
 identifier VARCHAR(21)
 identifier_type_code INTEGER FK >- Identifier_Type_LUT.id
 state VARCHAR(3)
@@ -244,7 +249,7 @@ source_field TEXT
 Orgname
 -----
 id SERIAL PK
-npi BIGINT FK >- npid.npi
+npi BIGINT FK >- NPI.npi
 organization_name VARCHAR(70)
 orgname_type_code INTEGER FK >- Orgname_Type_LUT.id
 code_description VARCHAR(100)
@@ -253,7 +258,7 @@ code_description VARCHAR(100)
 NPI_Phone
 -----
 id SERIAL PK
-npi VARCHAR(10) FK >- npid.npi
+npi BIGINT FK >- NPI.npi
 phone_type_id INTEGER FK >- Phone_Type_LUT.id
 phone_number VARCHAR(20)
 is_fax BOOLEAN
@@ -261,8 +266,8 @@ is_fax BOOLEAN
 NPI_Taxonomy
 -----
 id SERIAL PK
-npi VARCHAR(10) FK >- npid.npi
-NUCC_Taxonomy_Code_id >- NUCC_Taxonomy_Code.id
+npi BIGINT FK >- NPI.npi
+NUCC_Taxonomy_Code_id INT FK >- NUCC_Taxonomy_Code.id
 license_number VARCHAR(20)
 license_state_id INTEGER FK >- State_Code_LUT.id
 is_primary BOOLEAN
@@ -271,20 +276,26 @@ taxonomy_group VARCHAR(10)
 NPI_Identifiers
 -----
 id SERIAL PK
-npi VARCHAR(10) FK >- npid.npi
+npi BIGINT FK >- NPI.npi
 identifier VARCHAR(20)
 type_code VARCHAR(2)
 state_id INTEGER FK >- State_Code_LUT.id
 issuer VARCHAR(80)
 
+NPI_Endpoint
+-----------
+id SERIAL PK 
+npi BIGINT FK >- NPI.npi
+Endpoint_id INT FK >- Endpoint.id
+
 Endpoint_Type_LUT
 -----
-id SERIAL PK
+id INT SERIAL PK
 identifier_type_description TEXT UNIQUE
 
 Endpoint
 --------
-id SERIAL PK
+id INT SERIAL PK
 endpoint_url VARCHAR(500) # for now only FHIR and Direct
 endpoint_name VARCHAR(100) # endpoint NPPES file as endpoint_description
 endpoint_desc VARCHAR(100) # endpoint NPPES file as endpoint_comments
