@@ -17,6 +17,7 @@ CREATE TABLE "NPIToPhone" (
     "NPI_id" BIGINT   NOT NULL,
     "PhoneType_id" INTEGER   NOT NULL,
     "PhoneNumber_id" INTEGER   NOT NULL,
+    "PhoneExtension_id" INTEGER  NULL,
     "is_fax" BOOLEAN   NOT NULL,
     CONSTRAINT "pk_NPIPhone" PRIMARY KEY (
         "id"
@@ -28,4 +29,10 @@ Create TABLE "PhoneNumber" (
     "id" int   NOT NULL,
     "phone_number" VARCHAR(20)   NOT NULL,
     CONSTRAINT "pk_PhoneNumber" PRIMARY KEY ( id )
+);
+
+Create TABLE "PhoneExtension" (
+    "id" int   NOT NULL,
+    "phone_extension" VARCHAR(10)   NOT NULL,
+    CONSTRAINT "pk_PhoneExtension" PRIMARY KEY ( id )
 );
