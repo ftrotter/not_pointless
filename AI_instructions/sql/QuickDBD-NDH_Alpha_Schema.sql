@@ -19,13 +19,13 @@
 -- What about provider avaiiaiblity?
 -- Totally New
 
-CREATE TABLE "Users" (
+CREATE TABLE "User" (
     "id" INT   NOT NULL,
     "Email" varchar   NOT NULL,
     "FirstName" varchar   NOT NULL,
     "LastName" varchar   NOT NULL,
     "IdentityVerified" boolean   NOT NULL,
-    CONSTRAINT "pk_Users" PRIMARY KEY (
+    CONSTRAINT "pk_User" PRIMARY KEY (
         "id"
      )
 );
@@ -34,16 +34,16 @@ CREATE TABLE "UserAccessRole" (
     "id" INT   NOT NULL,
     "User_id" INT   NOT NULL,
     "Role_id" INT   NOT NULL,
-    "AccessToNPI" INT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     CONSTRAINT "pk_UserAccessRole" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Roles" (
+CREATE TABLE "Role" (
     "id" INT   NOT NULL,
     "Role" varchar(100)   NOT NULL,
-    CONSTRAINT "pk_Roles" PRIMARY KEY (
+    CONSTRAINT "pk_Role" PRIMARY KEY (
         "id"
      )
 );
@@ -75,80 +75,88 @@ CREATE TABLE "OrganizationToHealthcareBrand" (
 
 -- SOURCED FROM Payer FHIR / JSON Data or from the PUFs/Google Searches etc.
 CREATE TABLE "PayerToEndpoint" (
-    "PayerID" int   NOT NULL,
-    "EndpointID" int   NOT NULL
+    "id" int   NOT NULL,
+    "Payer_id" int   NOT NULL,
+    "Endpoint_id" int   NOT NULL,
+    CONSTRAINT "pk_PayerToEndpoint" PRIMARY KEY (
+        "id"
+     )
 );
 
 CREATE TABLE "Payer" (
     -- marketplace/network-puf.IssuerID
-    "PayerID" int   NOT NULL,
+    "id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.IssuerMarketPlaceMarketingName
     "PayerName" varchar   NOT NULL,
     CONSTRAINT "pk_Payer" PRIMARY KEY (
-        "PayerID"
+        "id"
      )
 );
 
 -- There are a lot of atributes for plans, not sure how much we need to include
-CREATE TABLE "Plans" (
+CREATE TABLE "Plan" (
     -- marketplace/plan-attributes-puf.PlanId
-    "PlanID" int   NOT NULL,
-    "IssuingPayerID" int   NOT NULL,
-    "MarketCoverageID" int   NOT NULL,
+    "id" int   NOT NULL,
+    "Payer_id" int   NOT NULL,
+    "MarketCoverage_id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.ServiceAreaId
-    "ServiceAreaId" varchar   NOT NULL,
+    "ServiceArea_id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.DentalOnlyPlan
     "DentalOnlyPlan" boolean   NOT NULL,
     -- marketplace/plan-attributes-puf.PlanMarketingName
     "PlanMarketingName" varchar   NOT NULL,
     -- marketplace/plan-attributes-puf.HIOSProductId
     "HIOSProductID" varchar   NOT NULL,
-    "PlanTypeID" int   NOT NULL,
+    "PlanType_id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.IsNewPlan
     "IsNewPlan" boolean   NOT NULL,
-    CONSTRAINT "pk_Plans" PRIMARY KEY (
-        "PlanID"
+    CONSTRAINT "pk_Plan" PRIMARY KEY (
+        "id"
      )
 );
 
-CREATE TABLE "PlanTypes" (
-    "ID" int   NOT NULL,
+CREATE TABLE "PlanType" (
+    "id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.PlanType
     "PlanType" varchar   NOT NULL,
-    CONSTRAINT "pk_PlanTypes" PRIMARY KEY (
-        "ID"
+    CONSTRAINT "pk_PlanType" PRIMARY KEY (
+        "id"
      )
 );
 
 CREATE TABLE "MarketCoverage" (
-    "ID" int   NOT NULL,
+    "id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.MarketCoverage
     "MarketCoverage" varchar   NOT NULL,
     CONSTRAINT "pk_MarketCoverage" PRIMARY KEY (
-        "ID"
+        "id"
      )
 );
 
-CREATE TABLE "NetworksToPlans" (
-    "PlanID" int   NOT NULL,
-    "NetworkID" int   NOT NULL
+CREATE TABLE "NetworkToPlan" (
+    "id" int   NOT NULL,
+    "Plan_id" int   NOT NULL,
+    "Network_id" int   NOT NULL,
+    CONSTRAINT "pk_NetworkToPlan" PRIMARY KEY (
+        "id"
+     )
 );
 
-CREATE TABLE "Networks" (
+CREATE TABLE "Network" (
     -- marketplace/network-puf.NetworkID
-    "NetworkID" int   NOT NULL,
+    "id" int   NOT NULL,
     -- marketplace/network-puf.NetworkName
     "NetworkName" varchar   NOT NULL,
     -- marketplace/network-puf.NetworkURL
     "NetworkURL" varchar   NOT NULL,
-    CONSTRAINT "pk_Networks" PRIMARY KEY (
-        "NetworkID"
+    CONSTRAINT "pk_Network" PRIMARY KEY (
+        "id"
      )
 );
 
 CREATE TABLE "ServiceArea" (
     -- marketplace/plan-attributes-puf.ServiceAreaId
-    "ID" int   NOT NULL,
+    "id" int   NOT NULL,
     -- marketplace/service-area-puf.ServiceAreaName
     "ServiceAreaName" varchar   NOT NULL,
     -- marketplace/service-area-puf.StateCode
@@ -156,32 +164,44 @@ CREATE TABLE "ServiceArea" (
     -- wishlist
     "shape" geometry   NOT NULL,
     CONSTRAINT "pk_ServiceArea" PRIMARY KEY (
-        "ID"
+        "id"
      )
 );
 
 -- PECOS Sourced initially, then UX Maintained
 CREATE TABLE "NetworkToOrg" (
-    "NetworkID" int   NOT NULL,
-    "Organization_id" int   NOT NULL
+    "id" int   NOT NULL,
+    "Network_id" int   NOT NULL,
+    "Organization_id" int   NOT NULL,
+    CONSTRAINT "pk_NetworkToOrg" PRIMARY KEY (
+        "id"
+     )
 );
 
 CREATE TABLE "OrgToEndpoint" (
+    "id" int   NOT NULL,
     "Organization_id" int   NOT NULL,
-    "EndpointID" int   NOT NULL
+    "Endpoint_id" int   NOT NULL,
+    CONSTRAINT "pk_OrgToEndpoint" PRIMARY KEY (
+        "id"
+     )
 );
 
-CREATE TABLE "EHR_to_NPI" (
-    "NPI" int   NOT NULL,
-    "EHR_ID" int   NOT NULL
+CREATE TABLE "EHRToNPI" (
+    "id" int   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
+    "EHR_id" int   NOT NULL,
+    CONSTRAINT "pk_EHRToNPI" PRIMARY KEY (
+        "id"
+     )
 );
 
 CREATE TABLE "EHR" (
-    "EHR_ID" int   NOT NULL,
+    "id" int   NOT NULL,
     -- Sourced from CHPL data here https://chpl.healthit.gov/
     "CHPL_ID" VARCHAR(200)   NOT NULL,
     CONSTRAINT "pk_EHR" PRIMARY KEY (
-        "EHR_ID"
+        "id"
      )
 );
 
@@ -193,18 +213,18 @@ CREATE TABLE "Address" (
     "address_name" VARCHAR(200)   NOT NULL,
     "barcode_delivery_code" VARCHAR(12)   NOT NULL,
     "smarty_key" VARCHAR(10)   NOT NULL,
-    "Address_Type_id" INT   NOT NULL,
-    "address_us_id" INT   NULL,
-    "address_international_id" INT   NULL,
-    "address_nonstandard_id" INT   NULL,
+    "AddressType_id" INT   NOT NULL,
+    "AddressUS_id" INT   NULL,
+    "AddressInternational_id" INT   NULL,
+    "AddressNonstandard_id" INT   NULL,
     CONSTRAINT "pk_Address" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Address_US" (
+CREATE TABLE "AddressUS" (
     "id" INT   NOT NULL,
-    "address_id" INT   NOT NULL,
+    "Address_id" INT   NOT NULL,
     "input_id" VARCHAR(36)   NOT NULL,
     "input_index" INT   NOT NULL,
     "candidate_index" INT   NOT NULL,
@@ -262,14 +282,14 @@ CREATE TABLE "Address_US" (
     "lacslink_indicator" VARCHAR(1)   NOT NULL,
     "suitelink_match" VARCHAR(5)   NOT NULL,
     "enhanced_match" VARCHAR(64)   NOT NULL,
-    CONSTRAINT "pk_Address_US" PRIMARY KEY (
+    CONSTRAINT "pk_AddressUS" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Address_International" (
+CREATE TABLE "AddressInternational" (
     "id" INT   NOT NULL,
-    "address_id" INT   NOT NULL,
+    "Address_id" INT   NOT NULL,
     "input_id" VARCHAR(36)   NOT NULL,
     "country" VARCHAR(64)   NOT NULL,
     "geocode" VARCHAR(4)   NOT NULL,
@@ -297,22 +317,22 @@ CREATE TABLE "Address_International" (
     "verification_status" VARCHAR(32)   NOT NULL,
     "address_precision" VARCHAR(32)   NOT NULL,
     "max_address_precision" VARCHAR(32)   NOT NULL,
-    CONSTRAINT "pk_Address_International" PRIMARY KEY (
+    CONSTRAINT "pk_AddressInternational" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Address_Nonstandard" (
+CREATE TABLE "AddressNonstandard" (
     "id" INT   NOT NULL,
-    "address_id" INT   NOT NULL,
+    "Address_id" INT   NOT NULL,
     "raw_address" TEXT   NOT NULL,
     "notes" TEXT   NOT NULL,
-    CONSTRAINT "pk_Address_Nonstandard" PRIMARY KEY (
+    CONSTRAINT "pk_AddressNonstandard" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Credential_LUT" (
+CREATE TABLE "CredentialLUT" (
     "id" INT   NOT NULL,
     -- i.e. M.D.
     "Credential_acronym" VARCHAR(20)   NOT NULL,
@@ -320,7 +340,7 @@ CREATE TABLE "Credential_LUT" (
     "Credential_name" VARCHAR(100)   NOT NULL,
     -- for when there is only one source for the credential (unlike medical schools etc)
     "Credential_source_url" VARCHAR(250)   NOT NULL,
-    CONSTRAINT "pk_Credential_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_CredentialLUT" PRIMARY KEY (
         "id"
      )
 );
@@ -351,7 +371,7 @@ CREATE TABLE "Individual" (
 CREATE TABLE "Organization" (
     "id" int(10)   NOT NULL,
     "org_legal_name" VARCHAR(200)   NOT NULL,
-    "AuthorizedOfficial_Invidual_id" INT   NOT NULL,
+    "AuthorizedOfficial_Individual_id" INT   NOT NULL,
     "ParentOrganization_id" INT   NOT NULL,
     "OrganizationTIN" VARCHAR(10)   NOT NULL,
     "VTIN" VARCHAR(32)   NOT NULL,
@@ -365,7 +385,7 @@ CREATE TABLE "Organization" (
 );
 
 CREATE TABLE "NPI" (
-    "npi" BIGINT   NOT NULL,
+    "id" BIGINT   NOT NULL,
     "entity_type_code" SMALLINT   NOT NULL,
     "replacement_npi" VARCHAR(11)   NOT NULL,
     "enumeration_date" DATE   NOT NULL,
@@ -375,97 +395,97 @@ CREATE TABLE "NPI" (
     "reactivation_date" DATE   NOT NULL,
     "certification_date" DATE   NOT NULL,
     CONSTRAINT "pk_NPI" PRIMARY KEY (
-        "npi"
+        "id"
      )
 );
 
-CREATE TABLE "NPI_Individual" (
+CREATE TABLE "NPIIndividual" (
     "id" INT   NOT NULL,
-    "npi" BIGINT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     "Individual_id" INT   NOT NULL,
     "is_sole_proprietor" BOOLEAN   NOT NULL,
     "sex_code" CHAR(1)   NOT NULL,
-    CONSTRAINT "pk_NPI_Individual" PRIMARY KEY (
+    CONSTRAINT "pk_NPIIndividual" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Organization" (
+CREATE TABLE "NPIOrganization" (
     "id" INT   NOT NULL,
-    "npi" BIGINT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     "Organization_id" INT   NOT NULL,
-    CONSTRAINT "pk_NPI_Organization" PRIMARY KEY (
+    CONSTRAINT "pk_NPIOrganization" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Identifier_Type_LUT" (
+CREATE TABLE "IdentifierTypeLUT" (
     "id" int   NOT NULL,
     "identifier_type_description" TEXT   NOT NULL,
-    CONSTRAINT "pk_Identifier_Type_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_IdentifierTypeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_Identifier_Type_LUT_identifier_type_description" UNIQUE (
+    CONSTRAINT "uc_IdentifierTypeLUT_identifier_type_description" UNIQUE (
         "identifier_type_description"
     )
 );
 
-CREATE TABLE "NPI_Identifier" (
+CREATE TABLE "NPIIdentifier" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     "identifier" VARCHAR(21)   NOT NULL,
-    "identifier_type_code" INTEGER   NOT NULL,
+    "IdentifierType_id" INTEGER   NOT NULL,
     "state" VARCHAR(3)   NOT NULL,
     "issuer" VARCHAR(81)   NOT NULL,
-    CONSTRAINT "pk_NPI_Identifier" PRIMARY KEY (
+    CONSTRAINT "pk_NPIIdentifier" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Address_Type_LUT" (
+CREATE TABLE "AddressTypeLUT" (
     "id" int   NOT NULL,
     "address_type_description" TEXT   NOT NULL,
-    CONSTRAINT "pk_Address_Type_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_AddressTypeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_Address_Type_LUT_address_type_description" UNIQUE (
+    CONSTRAINT "uc_AddressTypeLUT_address_type_description" UNIQUE (
         "address_type_description"
     )
 );
 
-CREATE TABLE "Phone_Type_LUT" (
+CREATE TABLE "PhoneTypeLUT" (
     "id" int   NOT NULL,
     "phone_type_description" TEXT   NOT NULL,
-    CONSTRAINT "pk_Phone_Type_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_PhoneTypeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_Phone_Type_LUT_phone_type_description" UNIQUE (
+    CONSTRAINT "uc_PhoneTypeLUT_phone_type_description" UNIQUE (
         "phone_type_description"
     )
 );
 
 -- We keep this seperate because there are several state-data-not-address data elements we need it for.
-CREATE TABLE "State_Code_LUT" (
+CREATE TABLE "StateCodeLUT" (
     "id" int   NOT NULL,
     "state_code" VARCHAR(100)   NOT NULL,
     "state_name" VARCHAR(100)   NOT NULL,
-    CONSTRAINT "pk_State_Code_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_StateCodeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_State_Code_LUT_state_code" UNIQUE (
+    CONSTRAINT "uc_StateCodeLUT_state_code" UNIQUE (
         "state_code"
     )
 );
 
-CREATE TABLE "Orgname_Type_LUT" (
+CREATE TABLE "OrgnameTypeLUT" (
     "id" int   NOT NULL,
     "orgname_description" TEXT   NOT NULL,
     "source_file" TEXT   NOT NULL,
     "source_field" TEXT   NOT NULL,
-    CONSTRAINT "pk_Orgname_Type_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_OrgnameTypeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_Orgname_Type_LUT_orgname_description" UNIQUE (
+    CONSTRAINT "uc_OrgnameTypeLUT_orgname_description" UNIQUE (
         "orgname_description"
     )
 );
@@ -474,75 +494,75 @@ CREATE TABLE "Orgname" (
     "id" int   NOT NULL,
     "Organization_id" INT   NOT NULL,
     "organization_name" VARCHAR(70)   NOT NULL,
-    "orgname_type_code" INTEGER   NOT NULL,
+    "OrgnameType_id" INTEGER   NOT NULL,
     "code_description" VARCHAR(100)   NOT NULL,
     CONSTRAINT "pk_Orgname" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Address" (
+CREATE TABLE "NPIAddress" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
-    "address_type_id" INTEGER   NOT NULL,
-    "address_id" INT   NOT NULL,
-    CONSTRAINT "pk_NPI_Address" PRIMARY KEY (
+    "NPI_id" BIGINT   NOT NULL,
+    "AddressType_id" INTEGER   NOT NULL,
+    "Address_id" INT   NOT NULL,
+    CONSTRAINT "pk_NPIAddress" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Phone" (
+CREATE TABLE "NPIPhone" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
-    "phone_type_id" INTEGER   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
+    "PhoneType_id" INTEGER   NOT NULL,
     "phone_number" VARCHAR(20)   NOT NULL,
     "is_fax" BOOLEAN   NOT NULL,
-    CONSTRAINT "pk_NPI_Phone" PRIMARY KEY (
+    CONSTRAINT "pk_NPIPhone" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Taxonomy" (
+CREATE TABLE "NPITaxonomy" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
-    "NUCC_Taxonomy_Code_id" INT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
+    "NUCCTaxonomyCode_id" INT   NOT NULL,
     "license_number" VARCHAR(20)   NOT NULL,
-    "license_state_id" INTEGER   NOT NULL,
+    "StateCode_id" INTEGER   NOT NULL,
     "is_primary" BOOLEAN   NOT NULL,
     "taxonomy_group" VARCHAR(10)   NOT NULL,
-    CONSTRAINT "pk_NPI_Taxonomy" PRIMARY KEY (
+    CONSTRAINT "pk_NPITaxonomy" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Identifiers" (
+CREATE TABLE "NPIIdentifiers" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     "identifier" VARCHAR(20)   NOT NULL,
     "type_code" VARCHAR(2)   NOT NULL,
-    "state_id" INTEGER   NOT NULL,
+    "StateCode_id" INTEGER   NOT NULL,
     "issuer" VARCHAR(80)   NOT NULL,
-    CONSTRAINT "pk_NPI_Identifiers" PRIMARY KEY (
+    CONSTRAINT "pk_NPIIdentifiers" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NPI_Endpoint" (
+CREATE TABLE "NPIEndpoint" (
     "id" int   NOT NULL,
-    "npi" BIGINT   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
     "Endpoint_id" INT   NOT NULL,
-    CONSTRAINT "pk_NPI_Endpoint" PRIMARY KEY (
+    CONSTRAINT "pk_NPIEndpoint" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "Endpoint_Type_LUT" (
+CREATE TABLE "EndpointTypeLUT" (
     "id" INT   NOT NULL,
     "identifier_type_description" TEXT   NOT NULL,
-    CONSTRAINT "pk_Endpoint_Type_LUT" PRIMARY KEY (
+    CONSTRAINT "pk_EndpointTypeLUT" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_Endpoint_Type_LUT_identifier_type_description" UNIQUE (
+    CONSTRAINT "uc_EndpointTypeLUT_identifier_type_description" UNIQUE (
         "identifier_type_description"
     )
 );
@@ -555,16 +575,16 @@ CREATE TABLE "Endpoint" (
     "endpoint_name" VARCHAR(100)   NOT NULL,
     -- endpoint NPPES file as endpoint_comments
     "endpoint_desc" VARCHAR(100)   NOT NULL,
-    "endpoint_address_id" int   NOT NULL,
-    "endpoint_type_id" int   NOT NULL,
+    "EndpointAddress_id" int   NOT NULL,
+    "EndpointType_id" int   NOT NULL,
     CONSTRAINT "pk_Endpoint" PRIMARY KEY (
         "id"
      )
 );
 
-CREATE TABLE "NUCC_Taxonomy_Code" (
+CREATE TABLE "NUCCTaxonomyCode" (
     "id" int   NOT NULL,
-    "parent_nucc_taxonomy_code_id" INT   NOT NULL,
+    "ParentNUCCTaxonomyCode_id" INT   NOT NULL,
     "taxonomy_code" VARCHAR(10)   NOT NULL,
     "tax_grouping" TEXT   NOT NULL,
     "tax_classification" TEXT   NOT NULL,
@@ -574,17 +594,21 @@ CREATE TABLE "NUCC_Taxonomy_Code" (
     "tax_display_name" TEXT   NOT NULL,
     "tax_certifying_board_name" TEXT   NOT NULL,
     "tax_certifying_board_url" TEXT   NOT NULL,
-    CONSTRAINT "pk_NUCC_Taxonomy_Code" PRIMARY KEY (
+    CONSTRAINT "pk_NUCCTaxonomyCode" PRIMARY KEY (
         "id"
      ),
-    CONSTRAINT "uc_NUCC_Taxonomy_Code_taxonomy_code" UNIQUE (
+    CONSTRAINT "uc_NUCCTaxonomyCode_taxonomy_code" UNIQUE (
         "taxonomy_code"
     )
 );
 
-CREATE TABLE "NUCC_Taxonomy_Code_Path" (
-    "nucc_taxonomy_code_decendant_id" INT   NOT NULL,
-    "nucc_taxonomy_code_ancestor_id" INT   NOT NULL
+CREATE TABLE "NUCCTaxonomyCodePath" (
+    "id" int   NOT NULL,
+    "NUCCTaxonomyCodeDecendant_id" INT   NOT NULL,
+    "NUCCTaxonomyCodeAncestor_id" INT   NOT NULL,
+    CONSTRAINT "pk_NUCCTaxonomyCodePath" PRIMARY KEY (
+        "id"
+     )
 );
 
 CREATE TABLE "MedicareProviderType" (
@@ -595,182 +619,12 @@ CREATE TABLE "MedicareProviderType" (
      )
 );
 
-CREATE TABLE "NUCC_MedicareProviderType" (
+CREATE TABLE "NUCCMedicareProviderType" (
+    "id" int   NOT NULL,
     "MedicareProviderType_id" INT   NOT NULL,
-    "NUCC_Taxonomy_Code_id" INT   NOT NULL
+    "NUCCTaxonomyCode_id" INT   NOT NULL,
+    CONSTRAINT "pk_NUCCMedicareProviderType" PRIMARY KEY (
+        "id"
+     )
 );
-
-ALTER TABLE "UserAccessRole" ADD CONSTRAINT "fk_UserAccessRole_User_id" FOREIGN KEY("User_id")
-REFERENCES "Users" ("id");
-
-ALTER TABLE "UserAccessRole" ADD CONSTRAINT "fk_UserAccessRole_Role_id" FOREIGN KEY("Role_id")
-REFERENCES "Roles" ("id");
-
-ALTER TABLE "UserAccessRole" ADD CONSTRAINT "fk_UserAccessRole_AccessToNPI" FOREIGN KEY("AccessToNPI")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "OrganizationToHealthcareBrand" ADD CONSTRAINT "fk_OrganizationToHealthcareBrand_HealthcareBrand_id" FOREIGN KEY("HealthcareBrand_id")
-REFERENCES "HealthcareBrand" ("id");
-
-ALTER TABLE "OrganizationToHealthcareBrand" ADD CONSTRAINT "fk_OrganizationToHealthcareBrand_Organization_id" FOREIGN KEY("Organization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "PayerToEndpoint" ADD CONSTRAINT "fk_PayerToEndpoint_PayerID" FOREIGN KEY("PayerID")
-REFERENCES "Payer" ("PayerID");
-
-ALTER TABLE "PayerToEndpoint" ADD CONSTRAINT "fk_PayerToEndpoint_EndpointID" FOREIGN KEY("EndpointID")
-REFERENCES "Endpoint" ("id");
-
-ALTER TABLE "Plans" ADD CONSTRAINT "fk_Plans_IssuingPayerID" FOREIGN KEY("IssuingPayerID")
-REFERENCES "Payer" ("PayerID");
-
-ALTER TABLE "Plans" ADD CONSTRAINT "fk_Plans_MarketCoverageID" FOREIGN KEY("MarketCoverageID")
-REFERENCES "MarketCoverage" ("ID");
-
-ALTER TABLE "Plans" ADD CONSTRAINT "fk_Plans_ServiceAreaId" FOREIGN KEY("ServiceAreaId")
-REFERENCES "ServiceArea" ("ID");
-
-ALTER TABLE "Plans" ADD CONSTRAINT "fk_Plans_PlanTypeID" FOREIGN KEY("PlanTypeID")
-REFERENCES "PlanTypes" ("ID");
-
-ALTER TABLE "NetworksToPlans" ADD CONSTRAINT "fk_NetworksToPlans_PlanID" FOREIGN KEY("PlanID")
-REFERENCES "Plans" ("PlanID");
-
-ALTER TABLE "NetworksToPlans" ADD CONSTRAINT "fk_NetworksToPlans_NetworkID" FOREIGN KEY("NetworkID")
-REFERENCES "Networks" ("NetworkID");
-
-ALTER TABLE "NetworkToOrg" ADD CONSTRAINT "fk_NetworkToOrg_NetworkID" FOREIGN KEY("NetworkID")
-REFERENCES "Networks" ("NetworkID");
-
-ALTER TABLE "NetworkToOrg" ADD CONSTRAINT "fk_NetworkToOrg_Organization_id" FOREIGN KEY("Organization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "OrgToEndpoint" ADD CONSTRAINT "fk_OrgToEndpoint_Organization_id" FOREIGN KEY("Organization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "OrgToEndpoint" ADD CONSTRAINT "fk_OrgToEndpoint_EndpointID" FOREIGN KEY("EndpointID")
-REFERENCES "Endpoint" ("id");
-
-ALTER TABLE "EHR_to_NPI" ADD CONSTRAINT "fk_EHR_to_NPI_NPI" FOREIGN KEY("NPI")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "EHR_to_NPI" ADD CONSTRAINT "fk_EHR_to_NPI_EHR_ID" FOREIGN KEY("EHR_ID")
-REFERENCES "EHR" ("EHR_ID");
-
-ALTER TABLE "Address" ADD CONSTRAINT "fk_Address_Address_Type_id" FOREIGN KEY("Address_Type_id")
-REFERENCES "Address_Type_LUT" ("id");
-
-ALTER TABLE "Address" ADD CONSTRAINT "fk_Address_address_us_id" FOREIGN KEY("address_us_id")
-REFERENCES "Address_US" ("id");
-
-ALTER TABLE "Address" ADD CONSTRAINT "fk_Address_address_international_id" FOREIGN KEY("address_international_id")
-REFERENCES "Address_International" ("id");
-
-ALTER TABLE "Address" ADD CONSTRAINT "fk_Address_address_nonstandard_id" FOREIGN KEY("address_nonstandard_id")
-REFERENCES "Address_Nonstandard" ("id");
-
-ALTER TABLE "Address_US" ADD CONSTRAINT "fk_Address_US_address_id" FOREIGN KEY("address_id")
-REFERENCES "Address" ("id");
-
-ALTER TABLE "Address_US" ADD CONSTRAINT "fk_Address_US_State_id" FOREIGN KEY("State_id")
-REFERENCES "State_Code_LUT" ("id");
-
-ALTER TABLE "Address_International" ADD CONSTRAINT "fk_Address_International_address_id" FOREIGN KEY("address_id")
-REFERENCES "Address" ("id");
-
-ALTER TABLE "Address_Nonstandard" ADD CONSTRAINT "fk_Address_Nonstandard_address_id" FOREIGN KEY("address_id")
-REFERENCES "Address" ("id");
-
-ALTER TABLE "IndividualToCredential" ADD CONSTRAINT "fk_IndividualToCredential_Individual_id" FOREIGN KEY("Individual_id")
-REFERENCES "Individual" ("id");
-
-ALTER TABLE "IndividualToCredential" ADD CONSTRAINT "fk_IndividualToCredential_Credential_id" FOREIGN KEY("Credential_id")
-REFERENCES "Credential_LUT" ("id");
-
-ALTER TABLE "Organization" ADD CONSTRAINT "fk_Organization_AuthorizedOfficial_Invidual_id" FOREIGN KEY("AuthorizedOfficial_Invidual_id")
-REFERENCES "Individual" ("id");
-
-ALTER TABLE "Organization" ADD CONSTRAINT "fk_Organization_ParentOrganization_id" FOREIGN KEY("ParentOrganization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "NPI_Individual" ADD CONSTRAINT "fk_NPI_Individual_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Individual" ADD CONSTRAINT "fk_NPI_Individual_Individual_id" FOREIGN KEY("Individual_id")
-REFERENCES "Individual" ("id");
-
-ALTER TABLE "NPI_Organization" ADD CONSTRAINT "fk_NPI_Organization_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Organization" ADD CONSTRAINT "fk_NPI_Organization_Organization_id" FOREIGN KEY("Organization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "NPI_Identifier" ADD CONSTRAINT "fk_NPI_Identifier_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Identifier" ADD CONSTRAINT "fk_NPI_Identifier_identifier_type_code" FOREIGN KEY("identifier_type_code")
-REFERENCES "Identifier_Type_LUT" ("id");
-
-ALTER TABLE "Orgname" ADD CONSTRAINT "fk_Orgname_Organization_id" FOREIGN KEY("Organization_id")
-REFERENCES "Organization" ("id");
-
-ALTER TABLE "Orgname" ADD CONSTRAINT "fk_Orgname_orgname_type_code" FOREIGN KEY("orgname_type_code")
-REFERENCES "Orgname_Type_LUT" ("id");
-
-ALTER TABLE "NPI_Address" ADD CONSTRAINT "fk_NPI_Address_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Address" ADD CONSTRAINT "fk_NPI_Address_address_type_id" FOREIGN KEY("address_type_id")
-REFERENCES "Address_Type_LUT" ("id");
-
-ALTER TABLE "NPI_Address" ADD CONSTRAINT "fk_NPI_Address_address_id" FOREIGN KEY("address_id")
-REFERENCES "Address" ("id");
-
-ALTER TABLE "NPI_Phone" ADD CONSTRAINT "fk_NPI_Phone_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Phone" ADD CONSTRAINT "fk_NPI_Phone_phone_type_id" FOREIGN KEY("phone_type_id")
-REFERENCES "Phone_Type_LUT" ("id");
-
-ALTER TABLE "NPI_Taxonomy" ADD CONSTRAINT "fk_NPI_Taxonomy_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Taxonomy" ADD CONSTRAINT "fk_NPI_Taxonomy_NUCC_Taxonomy_Code_id" FOREIGN KEY("NUCC_Taxonomy_Code_id")
-REFERENCES "NUCC_Taxonomy_Code" ("id");
-
-ALTER TABLE "NPI_Taxonomy" ADD CONSTRAINT "fk_NPI_Taxonomy_license_state_id" FOREIGN KEY("license_state_id")
-REFERENCES "State_Code_LUT" ("id");
-
-ALTER TABLE "NPI_Identifiers" ADD CONSTRAINT "fk_NPI_Identifiers_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Identifiers" ADD CONSTRAINT "fk_NPI_Identifiers_state_id" FOREIGN KEY("state_id")
-REFERENCES "State_Code_LUT" ("id");
-
-ALTER TABLE "NPI_Endpoint" ADD CONSTRAINT "fk_NPI_Endpoint_npi" FOREIGN KEY("npi")
-REFERENCES "NPI" ("npi");
-
-ALTER TABLE "NPI_Endpoint" ADD CONSTRAINT "fk_NPI_Endpoint_Endpoint_id" FOREIGN KEY("Endpoint_id")
-REFERENCES "Endpoint" ("id");
-
-ALTER TABLE "Endpoint" ADD CONSTRAINT "fk_Endpoint_endpoint_address_id" FOREIGN KEY("endpoint_address_id")
-REFERENCES "Address" ("id");
-
-ALTER TABLE "Endpoint" ADD CONSTRAINT "fk_Endpoint_endpoint_type_id" FOREIGN KEY("endpoint_type_id")
-REFERENCES "Endpoint_Type_LUT" ("id");
-
-ALTER TABLE "NUCC_Taxonomy_Code" ADD CONSTRAINT "fk_NUCC_Taxonomy_Code_parent_nucc_taxonomy_code_id" FOREIGN KEY("parent_nucc_taxonomy_code_id")
-REFERENCES "NUCC_Taxonomy_Code" ("id");
-
-ALTER TABLE "NUCC_Taxonomy_Code_Path" ADD CONSTRAINT "fk_NUCC_Taxonomy_Code_Path_nucc_taxonomy_code_decendant_id" FOREIGN KEY("nucc_taxonomy_code_decendant_id")
-REFERENCES "NUCC_Taxonomy_Code" ("id");
-
-ALTER TABLE "NUCC_Taxonomy_Code_Path" ADD CONSTRAINT "fk_NUCC_Taxonomy_Code_Path_nucc_taxonomy_code_ancestor_id" FOREIGN KEY("nucc_taxonomy_code_ancestor_id")
-REFERENCES "NUCC_Taxonomy_Code" ("id");
-
-ALTER TABLE "NUCC_MedicareProviderType" ADD CONSTRAINT "fk_NUCC_MedicareProviderType_MedicareProviderType_id" FOREIGN KEY("MedicareProviderType_id")
-REFERENCES "MedicareProviderType" ("id");
-
-ALTER TABLE "NUCC_MedicareProviderType" ADD CONSTRAINT "fk_NUCC_MedicareProviderType_NUCC_Taxonomy_Code_id" FOREIGN KEY("NUCC_Taxonomy_Code_id")
-REFERENCES "NUCC_Taxonomy_Code" ("id");
 
