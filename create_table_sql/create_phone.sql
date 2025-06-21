@@ -12,14 +12,20 @@ CREATE TABLE "PhoneTypeLUT" (
 );
 
 
-
-CREATE TABLE "NPIPhone" (
+CREATE TABLE "NPIToPhone" (
     "id" int   NOT NULL,
     "NPI_id" BIGINT   NOT NULL,
     "PhoneType_id" INTEGER   NOT NULL,
-    "phone_number" VARCHAR(20)   NOT NULL,
+    "PhoneNumber_id" INTEGER   NOT NULL,
     "is_fax" BOOLEAN   NOT NULL,
     CONSTRAINT "pk_NPIPhone" PRIMARY KEY (
         "id"
      )
+);
+
+
+Create TABLE "PhoneNumber" (
+    "id" int   NOT NULL,
+    "phone_number" VARCHAR(20)   NOT NULL,
+    CONSTRAINT "pk_PhoneNumber" PRIMARY KEY ( id )
 );
