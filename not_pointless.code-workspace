@@ -14,6 +14,9 @@
 		},
 		{
 			"path": "../nppest2"
+		},
+		{
+			"path": "../pydurc"
 		}
 	],
 	"settings": {}
