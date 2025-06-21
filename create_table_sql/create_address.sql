@@ -135,3 +135,38 @@ CREATE TABLE address_nonstandard (
     raw_address TEXT,
     notes TEXT
 );
+
+
+CREATE TABLE "AddressTypeLUT" (
+    "id" int   NOT NULL,
+    "address_type_description" TEXT   NOT NULL,
+    CONSTRAINT "pk_AddressTypeLUT" PRIMARY KEY (
+        "id"
+     ),
+    CONSTRAINT "uc_AddressTypeLUT_address_type_description" UNIQUE (
+        "address_type_description"
+    )
+);
+
+-- We keep this seperate because there are several state-data-not-address data elements we need it for.
+CREATE TABLE "StateCodeLUT" (
+    "id" int   NOT NULL,
+    "state_code" VARCHAR(100)   NOT NULL,
+    "state_name" VARCHAR(100)   NOT NULL,
+    CONSTRAINT "pk_StateCodeLUT" PRIMARY KEY (
+        "id"
+     ),
+    CONSTRAINT "uc_StateCodeLUT_state_code" UNIQUE (
+        "state_code"
+    )
+);
+
+CREATE TABLE "NPIAddress" (
+    "id" int   NOT NULL,
+    "NPI_id" BIGINT   NOT NULL,
+    "AddressType_id" INTEGER   NOT NULL,
+    "Address_id" INT   NOT NULL,
+    CONSTRAINT "pk_NPIAddress" PRIMARY KEY (
+        "id"
+     )
+);
