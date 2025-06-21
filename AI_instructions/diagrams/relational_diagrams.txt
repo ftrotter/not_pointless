@@ -1,15 +1,161 @@
-# Relational Diagrams for Database Tables
-# Now in https://app.quickdatabasediagrams.com/#/d/yDhfcP
+# Modify this code to update the DB schema diagram.
+# To reset the sample schema, replace everything with
+# two dots ('..' - without quotes).
 
+# Features Currently Out Of Scope for the MVP
+# what about mid-leveld?
+# what about the "Am I at the front door where I am covered" problem?
+# Which is a permutation of "Am I at the front door"
+# What about patients complaining about "never there" providers for network adequacy
+# What else should patients/public be able to complain about?
+# What about the search by "Mayo Clinic" brand search problem?
+# What about the "right doctor wrong EHR endpoint" problem?
+# What about the "excluded provider at TIN" problem?
+# What about plan formularies? Do you want to be able to search for a medication and get a plan back?
+# What about provider schedules?
+# What about provider avaiiaiblity?
+
+
+################################################
+# Totally New
+###########
+
+Users
+---
+id INT PK
+Email varchar
+FirstName varchar
+LastName varchar
+IdentityVerified boolean
+
+
+UserAccessRole
+-------
+id INT PK
+User_id INT FK >- Users.id
+Role_id INT FK >- Roles.id
+AccessToNPI INT FK >- NPI.npi
+
+Roles
+---
+id INT PK
+Role varchar(100) 
+# Can be: 
+# self_accessing_own_personal_NPI, 
+# employer_managing_person_NPI, 
+# person_managing_org_NPI, 
+# person_owner_org_NPI, 
+# service_managing_NPI, 
+# CMSadmin_managing_NPI
+
+HealthcareBrand
+-----------
+id PK int(10)
+HealthcareBrand_name VARCHAR(200)
+TrademarkSerialNumber VARCHAR(20)
+
+OrganizationToHealthcareBrand
+------------------------
+id PK  int(10)
+HealthcareBrand_id INT FK >- HealthcareBrand.id 
+Organization_id INT FK >- Organization.id
+
+
+################################################
+# SOURCED FROM Payer FHIR / JSON Data or from the PUFs/Google Searches etc. 
+###########
+
+PayerToEndpoint
+------
+PayerID int FK >- Payer.PayerID
+EndpointID FK >- Endpoint.id
+
+Payer
+---
+PayerID int PK #marketplace/network-puf.IssuerID
+PayerName varchar #marketplace/plan-attributes-puf.IssuerMarketPlaceMarketingName
+
+Plans #There are a lot of atributes for plans, not sure how much we need to include
+---
+PlanID int PK #marketplace/plan-attributes-puf.PlanId
+IssuingPayerID int FK >- Payer.PayerID
+MarketCoverageID int FK - MarketCoverage.ID 
+ServiceAreaId varchar FK - ServiceArea.ID #marketplace/plan-attributes-puf.ServiceAreaId
+DentalOnlyPlan boolean #marketplace/plan-attributes-puf.DentalOnlyPlan
+PlanMarketingName varchar #marketplace/plan-attributes-puf.PlanMarketingName
+HIOSProductID varchar #marketplace/plan-attributes-puf.HIOSProductId
+PlanTypeID int FK >- PlanTypes.ID
+IsNewPlan boolean #marketplace/plan-attributes-puf.IsNewPlan
+
+PlanTypes
+---
+ID int PK
+PlanType varchar #marketplace/plan-attributes-puf.PlanType
+
+MarketCoverage
+---
+ID int PK
+MarketCoverage varchar #marketplace/plan-attributes-puf.MarketCoverage
+
+
+NetworksToPlans
+----
+PlanID int Fk >- Plans.PlanID
+NetworkID int Fk >- Networks.NetworkID 
+
+Networks
+---
+NetworkID int PK #marketplace/network-puf.NetworkID
+NetworkName varchar #marketplace/network-puf.NetworkName
+NetworkURL varchar #marketplace/network-puf.NetworkURL
+
+ServiceArea
+---
+ID PK #marketplace/plan-attributes-puf.ServiceAreaId
+ServiceAreaName varchar #marketplace/service-area-puf.ServiceAreaName
+StateCode varchar #marketplace/service-area-puf.StateCode
+shape geometry #wishlist
+
+################################################
+# PECOS Sourced initially, then UX Maintained
+##### 
+NetworkToOrg
+---------
+NetworkID int Fk >- Networks.NetworkID
+Organization_id int Fk >- Organization.id
+
+
+
+OrgToEndpoint
+----
+Organization_id int Fk >- Organization.id
+EndpointID FK >- Endpoint.id
+
+
+EHR_to_NPI
+-------
+NPI int FK >- NPI.NPI
+EHR_ID int FK >- EHR.EHR_ID
+
+
+EHR
+---
+EHR_ID int pk
+CHPL_ID VARCHAR(200) # Sourced from CHPL data here https://chpl.healthit.gov/#/search
+
+################################################
 ## Address Tables
-
 # There are multiple sources for addresses: NPPES, PECOS, Multiple claims flow service locations, Payer FHIR servers, etc. 
+# Then we feed these throught the International or US Smarty API and keep all of the results. 
+#########
+
 Address
 -----
 id PK INT
 address_name VARCHAR(200) # Required for FHIR Locations
 barcode_delivery_code VARCHAR(12)
 smarty_key VARCHAR(10)
+Address_Type_id INT FK >- Address_Type_LUT.id
 address_us_id INT NULL FK >- address_us.id
 address_international_id INT NULL FK >- address_international.id
 address_nonstandard_id INT NULL FK >- address_nonstandard.id
@@ -41,6 +187,7 @@ pmb_number VARCHAR(16)
 city_name VARCHAR(64)
 default_city_name VARCHAR(64)
 state_abbreviation CHAR(2)
+State_id INT FK >- State_Code_LUT.id
 zipcode CHAR(5)
 plus4_code VARCHAR(4)
 delivery_point CHAR(2)
@@ -111,21 +258,12 @@ Address_Nonstandard
 -----
 id PK INT
 address_id INT FK >- Address.id
-input_id VARCHAR(36)
-input_index INT
-candidate_index INT
-addressee VARCHAR(64)
-delivery_line_1 VARCHAR(64)
-delivery_line_2 VARCHAR(64)
-last_line VARCHAR(64)
-address_type VARCHAR(32)
-address_format VARCHAR(128)
 raw_address TEXT
 notes TEXT
 
-## NPPES Data Tables
-
-
+################################################
+## Normalized versions of NPPES Data Tables that are also FHIR requirements! 
+######
 
 Credential_LUT
 --------------------
@@ -153,23 +291,7 @@ email_address VARCHAR(200)
 maybe_SSN VARCHAR(10)
 
 
-HealthcareBrand
------------
-id PK int(10)
-HealthcareBrand_name VARCHAR(200)
-TrademarkSerialNumber VARCHAR(20)
 
-OrganizationToHealthcareBrand
-------------------------
-id PK  int(10)
-HealthcareBrand_id INT FK >- HealthcareBrand.id 
-Organization_id INT FK >- Organization.id
-
-
-OrganizationOtherName
------------------------
-id PK int(10)
-Organization_id INT FK >- Organization.id 
 
 
 Organization
@@ -178,8 +300,8 @@ id PK int(10)
 org_legal_name VARCHAR(200)
 AuthorizedOfficial_Invidual_id INT FK >- Individual.id 
 ParentOrganization_id INT FK >- Organization.id 
-OrganizationTIN VARCHAR(10)
-OrganizationTIN_HASH VARCHAR(32)
+OrganizationTIN VARCHAR(10) UNIQUE
+VTIN VARCHAR(32)
 OrganizationGLIEF VARCHAR(300)
 
 NPI
@@ -233,6 +355,7 @@ Phone_Type_LUT
 id  PK
 phone_type_description TEXT UNIQUE
 
+# We keep this seperate because there are several state-data-not-address data elements we need it for. 
 State_Code_LUT
 -----
 id  PK
@@ -249,10 +372,18 @@ source_field TEXT
 Orgname
 -----
 id  PK
-npi BIGINT FK >- NPI.npi
+Organization_id INT FK >- Organization.id
 organization_name VARCHAR(70)
 orgname_type_code INTEGER FK >- Orgname_Type_LUT.id
 code_description VARCHAR(100)
+
+NPI_Address
+-----
+id  PK
+npi BIGINT FK >- NPI.npi
+address_type_id INTEGER FK >- Address_Type_LUT.id
+address_id INT FK >- Address.id
+
 
 
 NPI_Phone
@@ -302,8 +433,8 @@ endpoint_desc VARCHAR(100) # endpoint NPPES file as endpoint_comments
 endpoint_address_id FK >- Address.id
 endpoint_type_id FK >- Endpoint_Type_LUT.id
 
-
-## NUCC Taxonomy Tables
+################################################
+## NUCC Taxonomy Tables sourced from the NUCC PUF and the NUCC Medicare Provider Type CrossWalk
 
 NUCC_Taxonomy_Code
 -----
@@ -316,11 +447,20 @@ tax_specialization TEXT
 tax_definition TEXT
 tax_notes TEXT
 tax_display_name TEXT
+tax_certifying_board_name TEXT 
+tax_certifying_board_url TEXT
 
 NUCC_Taxonomy_Code_Path
 -----
 nucc_taxonomy_code_decendant_id INT FK >- NUCC_Taxonomy_Code.id
 nucc_taxonomy_code_ancestor_id INT FK >- NUCC_Taxonomy_Code.id
 
+MedicareProviderType
+-----
+id INT PK 
+MedicareProviderType_name VARCHAR
 
-
+NUCC_MedicareProviderType
+------
+MedicareProviderType_id INT FK >- MedicareProviderType.id
+NUCC_Taxonomy_Code_id INT FK >- NUCC_Taxonomy_Code.id
