@@ -1,28 +1,22 @@
 -- SOURCED FROM Payer FHIR / JSON Data or from the PUFs/Google Searches etc.
 
 CREATE TABLE "PayerToEndpoint" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "Payer_id" int   NOT NULL,
-    "Endpoint_id" int   NOT NULL,
-    CONSTRAINT "pk_PayerToEndpoint" PRIMARY KEY (
-        "id"
-     )
+    "Endpoint_id" int   NOT NULL
 );
 
 CREATE TABLE "Payer" (
     -- marketplace/network-puf.IssuerID
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- marketplace/plan-attributes-puf.IssuerMarketPlaceMarketingName
-    "PayerName" varchar   NOT NULL,
-    CONSTRAINT "pk_Payer" PRIMARY KEY (
-        "id"
-     )
+    "PayerName" varchar   NOT NULL
 );
 
 -- There are a lot of atributes for plans, not sure how much we need to include
 CREATE TABLE "Plan" (
     -- marketplace/plan-attributes-puf.PlanId
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "Payer_id" int   NOT NULL,
     "MarketCoverage_id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.ServiceAreaId
@@ -35,71 +29,50 @@ CREATE TABLE "Plan" (
     "HIOSProductID" varchar   NOT NULL,
     "PlanType_id" int   NOT NULL,
     -- marketplace/plan-attributes-puf.IsNewPlan
-    "IsNewPlan" boolean   NOT NULL,
-    CONSTRAINT "pk_Plan" PRIMARY KEY (
-        "id"
-     )
+    "IsNewPlan" boolean   NOT NULL
 );
 
 CREATE TABLE "PlanType" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- marketplace/plan-attributes-puf.PlanType
-    "PlanType" varchar   NOT NULL,
-    CONSTRAINT "pk_PlanType" PRIMARY KEY (
-        "id"
-     )
+    "PlanType" varchar   NOT NULL
 );
 
 CREATE TABLE "MarketCoverage" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- marketplace/plan-attributes-puf.MarketCoverage
-    "MarketCoverage" varchar   NOT NULL,
-    CONSTRAINT "pk_MarketCoverage" PRIMARY KEY (
-        "id"
-     )
+    "MarketCoverage" varchar   NOT NULL
 );
 
 CREATE TABLE "NetworkToPlan" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "Plan_id" int   NOT NULL,
-    "Network_id" int   NOT NULL,
-    CONSTRAINT "pk_NetworkToPlan" PRIMARY KEY (
-        "id"
-     )
+    "Network_id" int   NOT NULL
 );
 
 CREATE TABLE "Network" (
     -- marketplace/network-puf.NetworkID
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- marketplace/network-puf.NetworkName
     "NetworkName" varchar   NOT NULL,
     -- marketplace/network-puf.NetworkURL
-    "NetworkURL" varchar   NOT NULL,
-    CONSTRAINT "pk_Network" PRIMARY KEY (
-        "id"
-     )
+    "NetworkURL" varchar   NOT NULL
 );
 
 CREATE TABLE "ServiceArea" (
     -- marketplace/plan-attributes-puf.ServiceAreaId
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- marketplace/service-area-puf.ServiceAreaName
     "ServiceAreaName" varchar   NOT NULL,
     -- marketplace/service-area-puf.StateCode
     "StateCode" varchar   NOT NULL,
     -- wishlist
-    "shape" geometry   NOT NULL,
-    CONSTRAINT "pk_ServiceArea" PRIMARY KEY (
-        "id"
-     )
+    "shape" geometry   NOT NULL
 );
 
 -- PECOS Sourced initially, then UX Maintained
 CREATE TABLE "NetworkToOrg" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "Network_id" int   NOT NULL,
-    "Organization_id" int   NOT NULL,
-    CONSTRAINT "pk_NetworkToOrg" PRIMARY KEY (
-        "id"
-     )
+    "Organization_id" int   NOT NULL
 );

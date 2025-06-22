@@ -16,21 +16,15 @@ CREATE TABLE "NPI" (
 );
 
 CREATE TABLE "NPIIndividual" (
-    "id" INT   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "NPI_id" BIGINT   NOT NULL,
     "Individual_id" INT   NOT NULL,
     "is_sole_proprietor" BOOLEAN   NOT NULL,
-    "sex_code" CHAR(1)   NOT NULL,
-    CONSTRAINT "pk_NPIIndividual" PRIMARY KEY (
-        "id"
-     )
+    "sex_code" CHAR(1)   NOT NULL
 );
 
 CREATE TABLE "NPIOrganization" (
-    "id" INT   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "NPI_id" BIGINT   NOT NULL,
-    "Organization_id" INT   NOT NULL,
-    CONSTRAINT "pk_NPIOrganization" PRIMARY KEY (
-        "id"
-     )
+    "Organization_id" INT   NOT NULL
 );

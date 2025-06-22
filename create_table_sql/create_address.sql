@@ -2,7 +2,7 @@
 
 -- Main address table
 CREATE TABLE address (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     barcode_delivery_code VARCHAR(12),
     smarty_key VARCHAR(10),
     address_us_id INT(10) NULL,
@@ -12,7 +12,7 @@ CREATE TABLE address (
 
 -- US address table
 CREATE TABLE address_us (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
     input_index INT,
@@ -80,7 +80,7 @@ CREATE TABLE address_us (
 
 -- International address table
 CREATE TABLE address_international (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
     country VARCHAR(64),
@@ -119,7 +119,7 @@ CREATE TABLE address_international (
 
 -- Non-standard address table
 CREATE TABLE address_nonstandard (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
     input_index INT,
@@ -138,11 +138,8 @@ CREATE TABLE address_nonstandard (
 
 
 CREATE TABLE "AddressTypeLUT" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "address_type_description" TEXT   NOT NULL,
-    CONSTRAINT "pk_AddressTypeLUT" PRIMARY KEY (
-        "id"
-     ),
     CONSTRAINT "uc_AddressTypeLUT_address_type_description" UNIQUE (
         "address_type_description"
     )
@@ -150,23 +147,17 @@ CREATE TABLE "AddressTypeLUT" (
 
 -- We keep this seperate because there are several state-data-not-address data elements we need it for.
 CREATE TABLE "StateCodeLUT" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "state_code" VARCHAR(100)   NOT NULL,
     "state_name" VARCHAR(100)   NOT NULL,
-    CONSTRAINT "pk_StateCodeLUT" PRIMARY KEY (
-        "id"
-     ),
     CONSTRAINT "uc_StateCodeLUT_state_code" UNIQUE (
         "state_code"
     )
 );
 
 CREATE TABLE "NPIAddress" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "NPI_id" BIGINT   NOT NULL,
     "AddressType_id" INTEGER   NOT NULL,
-    "Address_id" INT   NOT NULL,
-    CONSTRAINT "pk_NPIAddress" PRIMARY KEY (
-        "id"
-     )
+    "Address_id" INT   NOT NULL
 );

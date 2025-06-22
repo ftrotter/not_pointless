@@ -2,19 +2,13 @@
 
 
 CREATE TABLE "EHRToNPI" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "NPI_id" BIGINT   NOT NULL,
-    "EHR_id" int   NOT NULL,
-    CONSTRAINT "pk_EHRToNPI" PRIMARY KEY (
-        "id"
-     )
+    "EHR_id" int   NOT NULL
 );
 
 CREATE TABLE "EHR" (
-    "id" int   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     -- Sourced from CHPL data here https://chpl.healthit.gov/
-    "CHPL_ID" VARCHAR(200)   NOT NULL,
-    CONSTRAINT "pk_EHR" PRIMARY KEY (
-        "id"
-     )
+    "CHPL_ID" VARCHAR(200)   NOT NULL
 );

@@ -1,17 +1,11 @@
 CREATE TABLE "HealthcareBrand" (
-    "id" int(10)   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "HealthcareBrand_name" VARCHAR(200)   NOT NULL,
-    "TrademarkSerialNumber" VARCHAR(20)   NOT NULL,
-    CONSTRAINT "pk_HealthcareBrand" PRIMARY KEY (
-        "id"
-     )
+    "TrademarkSerialNumber" VARCHAR(20)   NOT NULL
 );
 
 CREATE TABLE "OrganizationToHealthcareBrand" (
-    "id" int(10)   NOT NULL,
+    "id" SERIAL PRIMARY KEY,
     "HealthcareBrand_id" INT   NOT NULL,
-    "Organization_id" INT   NOT NULL,
-    CONSTRAINT "pk_OrganizationToHealthcareBrand" PRIMARY KEY (
-        "id"
-     )
+    "Organization_id" INT   NOT NULL
 );

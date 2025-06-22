@@ -1,6 +1,6 @@
 
 CREATE TABLE "IdentifierTypeLUT" (
-    "id" int   NOT NULL,
+    "id" SERIAL,
     "identifier_type_description" TEXT   NOT NULL,
     CONSTRAINT "pk_IdentifierTypeLUT" PRIMARY KEY (
         "id"
@@ -11,7 +11,7 @@ CREATE TABLE "IdentifierTypeLUT" (
 );
 
 CREATE TABLE "NPIIdentifier" (
-    "id" int   NOT NULL,
+    "id" SERIAL,
     "NPI_id" BIGINT   NOT NULL,
     "identifier" VARCHAR(21)   NOT NULL,
     "IdentifierType_id" INTEGER   NOT NULL,
