@@ -1,3 +1,6 @@
+
+SET search_path TO nppes_normal;
+
 -- normalized version of data from NPPES (National Plan and Provider Enumeration System) 
 -- from https://download.cms.gov/nppes/NPI_Files.html
 -- NPI Core Entity Table
@@ -15,7 +18,7 @@ CREATE TABLE npidetail (
 
 -- Individuals
 CREATE TABLE npi_individual (
-    npi BIGINT PRIMARY KEY REFERENCES npidetails(npi),
+    npi BIGINT PRIMARY KEY REFERENCES  npidetail(npi),
     last_name VARCHAR(36),
     first_name VARCHAR(36),
     middle_name VARCHAR(21),
@@ -28,7 +31,7 @@ CREATE TABLE npi_individual (
 
 -- Organizations
 CREATE TABLE npi_organization (
-    npi BIGINT PRIMARY KEY REFERENCES npidetails(npi),
+    npi BIGINT PRIMARY KEY REFERENCES  npidetail(npi),
     organization_name VARCHAR(101),
     authorized_official_last_name VARCHAR(36),
     authorized_official_first_name VARCHAR(21),
@@ -40,7 +43,7 @@ CREATE TABLE npi_organization (
     authorized_official_phone VARCHAR(21),
     parent_org_lbn VARCHAR(71),
     parent_org_tin VARCHAR(10),
-    is_org_subpart BOOLEAN,
+    is_org_subpart BOOLEAN
 );
 
 -- identifier type lookup table
@@ -53,7 +56,7 @@ CREATE TABLE identifier_type_lut (
 -- Identifiers
 CREATE TABLE npi_identifier (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES npidetails(npi),
+    npi BIGINT REFERENCES  npidetail(npi),
     identifier VARCHAR(21),
     identifier_type_code INTEGER REFERENCES identifier_type_lut(id),
     state VARCHAR(3),
@@ -67,7 +70,7 @@ CREATE TABLE address_type_lut (
     address_type_description TEXT UNIQUE NOT NULL
 );
 
-INSERT INTO address_type_lut (description) VALUES
+INSERT INTO address_type_lut (address_type_description) VALUES
     ('mailing_address_main'),
     ('practice_location_main'),
     ('secondary_practice_location'),
@@ -79,7 +82,7 @@ CREATE TABLE phone_type_lut (
     phone_type_description TEXT UNIQUE NOT NULL
 );
 
-INSERT INTO phone_type_lut (description) VALUES
+INSERT INTO phone_type_lut (phone_type_description) VALUES
     ('main_mailing_phone'),
     ('main_practice_phone'),
     ('secondary_practice_phone'),
@@ -125,7 +128,7 @@ INSERT INTO orgname_type_lut (orgname_description, source_file, source_field) VA
 -- Organization Alternate Names
 CREATE TABLE orgname (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES npidetails(npi),
+    npi BIGINT REFERENCES  npidetail(npi),
     organization_name VARCHAR(70),
     orgname_type_code INTEGER REFERENCES orgname_type_lut(id),
     code_description VARCHAR(100)
@@ -134,8 +137,8 @@ CREATE TABLE orgname (
 -- Addresses
 CREATE TABLE npi_address (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES npidetails(npi),
-    address_type_id INTEGER REFERENCES address_type_lut(id),
+    npi BIGINT REFERENCES  npidetail(npi),
+    address_type_id INTEGER ,
     line_1 VARCHAR(55),
     line_2 VARCHAR(55),
     city VARCHAR(40),
@@ -147,8 +150,8 @@ CREATE TABLE npi_address (
 -- Phone Numbers
 CREATE TABLE npi_phone (
     id SERIAL PRIMARY KEY,
-    npi VARCHAR(10) REFERENCES npidetails(npi),
-    phone_type_id INTEGER REFERENCES phone_type_lut(id),
+    npi BIGINT REFERENCES  npidetail(npi),
+    phone_type_id INTEGER ,
     phone_number VARCHAR(20),
     is_fax BOOLEAN
 );
@@ -156,10 +159,10 @@ CREATE TABLE npi_phone (
 -- Taxonomy Entries
 CREATE TABLE npi_taxonomy (
     id SERIAL PRIMARY KEY,
-    npi VARCHAR(10) REFERENCES npidetails(npi),
+    npi BIGINT REFERENCES  npidetail(npi),
     taxonomy_code VARCHAR(10),
     license_number VARCHAR(20),
-    license_state_id INTEGER REFERENCES state_code_lut(id),
+    license_state_id INTEGER ,
     is_primary BOOLEAN,
     taxonomy_group VARCHAR(10)
 );
@@ -167,16 +170,16 @@ CREATE TABLE npi_taxonomy (
 -- Identifiers
 CREATE TABLE npi_identifiers (
     id SERIAL PRIMARY KEY,
-    npi VARCHAR(10) REFERENCES npidetails(npi),
+    npi BIGINT REFERENCES  npidetail(npi),
     identifier VARCHAR(20),
     type_code VARCHAR(2),
-    state_id INTEGER REFERENCES state_code_lut(id),
+    state_id INTEGER ,
     issuer VARCHAR(80)
 );
 
 CREATE TABLE npi_endpoints (
     id SERIAL PRIMARY KEY,
-    npi VARCHAR(10) NOT NULL REFERENCES npidetails(npi),
+    npi BIGINT NOT NULL REFERENCES  npidetail(npi),
     endpoint_type TEXT,                             -- E.g., Direct Messaging, FHIR, etc.
     endpoint_type_description TEXT,
     endpoint TEXT,                                  -- The actual URL or address
