@@ -199,6 +199,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'not_pointless.apps.NotPointlessConfig',
+    'durc_is_crud',
 ]
 
 MIDDLEWARE = [

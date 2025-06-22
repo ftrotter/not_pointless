@@ -26,4 +26,4 @@ I would like to simply verify that django can connect to this database.
 
 Lets create an ORM class for the table, and then use that ORM to create a simple html5 homepage for the DJango app that simply lists out the distinct URLs.
 
-All of this should be done underneath the current "not_pointless" INSTALLED_APP. 
+All of this should be done underneath the current "not_pointless" INSTALLED_APP.
