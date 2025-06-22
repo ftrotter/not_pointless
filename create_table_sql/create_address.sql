@@ -5,9 +5,9 @@ CREATE TABLE address (
     id SERIAL PRIMARY KEY,
     barcode_delivery_code VARCHAR(12),
     smarty_key VARCHAR(10),
-    address_us_id INT(10) NULL,
-    address_international_id INT(10) NULL,
-    address_nonstandard_id INT(10) NULL
+    address_us_id INT NULL,
+    address_international_id INT NULL,
+    address_nonstandard_id INT NULL
 );
 
 -- US address table
