@@ -31,3 +31,4 @@ To use the durc-is-crud package in this project:
    ```
 
 The durc commands will appear under the [durc_is_crud] section when you run `python manage.py`.
+
