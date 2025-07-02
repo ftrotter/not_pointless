@@ -10,7 +10,7 @@
 
 CREATE TABLE ndh.ClinicalOrganization (
     id SERIAL PRIMARY KEY,
-    org_legal_name VARCHAR(200)   NOT NULL,
+    ClinicalOrganization_legal_name VARCHAR(200)   NOT NULL,
     AuthorizedOfficial_Individual_id INT   NOT NULL,
     ParentOrganization_id INT   NOT NULL,
     OrganizationTIN VARCHAR(10)   NOT NULL,
@@ -29,20 +29,19 @@ CREATE TABLE ndh.VTIN (
 )
 
 
-
 CREATE TABLE ndh.ClinicalOrgnameTypeLUT (
     id SERIAL PRIMARY KEY,
     orgname_type_description TEXT   NOT NULL,
     source_file TEXT   NOT NULL,
     source_field TEXT   NOT NULL,
     CONSTRAINT uc_OrgnameTypeLUT_orgname_description UNIQUE (
-        orgname_description
+        orgname_type_description
     )
 );
 
 CREATE TABLE ndh.Orgname (
     id SERIAL PRIMARY KEY,
     ClinicalOrganization_id INT   NOT NULL,
-    organization_name VARCHAR(70)   NOT NULL,
+    ClinicalOrganization_name VARCHAR(70)   NOT NULL,
     ClinicalOrgnameType_id INTEGER   NOT NULL
 );
