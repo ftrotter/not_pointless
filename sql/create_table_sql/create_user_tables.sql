@@ -1,3 +1,5 @@
+-- These will need to be improved to support Oauth layers, decorations and an RBAC model.
+
 
 CREATE TABLE ndh.User (
     id SERIAL PRIMARY KEY,

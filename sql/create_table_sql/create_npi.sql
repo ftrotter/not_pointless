@@ -1,4 +1,7 @@
 
+-- These tables capture the dual-database nature of the NPI database which is so foundational to medical claims processing that we will have to keep it. 
+-- We want to support more sophisticated modeling of clinical organizations 
+
 
 CREATE TABLE ndh.NPI (
     npi BIGINT   NOT NULL,
@@ -20,9 +23,9 @@ CREATE TABLE ndh.NPI_to_Individual (
     sex_code CHAR(1)   NOT NULL
 );
 
-CREATE TABLE ndh.NPI_to_Organization (
+CREATE TABLE ndh.NPI_to_ClinicalOrganization (
     id SERIAL PRIMARY KEY,
     NPI_npi BIGINT   NOT NULL,
-    Organization_id INT   NOT NULL,
+    ClinicalOrganization_id INT   NOT NULL,
     PrimaryAuthorizedOfficial_Individual_id INT NOT NULL -- TODO shold this be its own intermediate table? With an is_primary boolean in it?
 );

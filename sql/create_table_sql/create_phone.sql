@@ -1,3 +1,7 @@
+-- I want to not support Faxes in the new NDH, but that may not be a realistic goal. 
+-- beyond that, this is just a reasonable way to model phone numbers that is normalized in a way that makes 
+-- detecting "same number... different extension" a useful excercise in provider data linking. 
+
 
 
 CREATE TABLE ndh.PhoneTypeLUT (

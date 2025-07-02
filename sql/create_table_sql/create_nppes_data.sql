@@ -1,6 +1,9 @@
 
 -- normalized version of data from NPPES (National Plan and Provider Enumeration System) 
 -- from https://download.cms.gov/nppes/NPI_Files.html
+
+
+
 -- NPI Core Entity Table
 CREATE TABLE nppes_normal.npidetail (
     npi BIGINT PRIMARY KEY,

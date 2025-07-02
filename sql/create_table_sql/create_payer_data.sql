@@ -1,9 +1,12 @@
 -- SOURCED FROM Payer FHIR / JSON Data or from the PUFs/Google Searches etc.
+-- I see no way to reduce these tables in a way that allows us make the change to a VTIN model,
+-- while still ultimately being compatible with the data we are required to express as low-level (i.e. the strict parts)
+-- of FHIR compliance. 
 
-CREATE TABLE ndh.PayerToEndpoint (
+CREATE TABLE ndh.PayerToInteropEndpoint (
     id SERIAL PRIMARY KEY,
     Payer_id int   NOT NULL,
-    Endpoint_id int   NOT NULL
+    InteropEndpoint_id int   NOT NULL
 );
 
 CREATE TABLE ndh.Payer (
@@ -44,19 +47,19 @@ CREATE TABLE ndh.MarketCoverage (
     MarketCoverage varchar   NOT NULL
 );
 
-CREATE TABLE ndh.NetworkToPlan (
+CREATE TABLE ndh.PlanNetworkToPlan (
     id SERIAL PRIMARY KEY,
     Plan_id int   NOT NULL,
-    Network_id int   NOT NULL
+    PlanNetwork_id int   NOT NULL
 );
 
-CREATE TABLE ndh.Network (
+CREATE TABLE ndh.PlanNetwork (
     -- marketplace/network-puf.NetworkID
     id SERIAL PRIMARY KEY,
     -- marketplace/network-puf.NetworkName
-    NetworkName varchar   NOT NULL,
+    PlanNetworkName varchar   NOT NULL,
     -- marketplace/network-puf.NetworkURL
-    NetworkURL varchar   NOT NULL
+    PlanNetworkURL varchar   NOT NULL
 );
 
 CREATE TABLE ndh.ServiceArea (
@@ -71,8 +74,8 @@ CREATE TABLE ndh.ServiceArea (
 );
 
 -- PECOS Sourced initially, then UX Maintained
-CREATE TABLE ndh.NetworkToOrg (
+CREATE TABLE ndh.PlanNetworkToOrg (
     id SERIAL PRIMARY KEY,
-    Network_id int   NOT NULL,
+    PlanNetwork_id int   NOT NULL,
     Organization_id int   NOT NULL
 );
