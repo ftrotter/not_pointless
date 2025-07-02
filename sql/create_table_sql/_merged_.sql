@@ -1,35 +1,22 @@
 -- Merged CREATE TABLE statements
--- Generated on: 2025-07-02 01:50:42
+-- Generated on: 2025-07-02 02:04:07
 -- Total CREATE TABLE statements: 63
 --
 -- Source files:
---   sql/create_table_sql/create_EHR.sql
---   sql/create_table_sql/create_address.sql
---   sql/create_table_sql/create_clinical_organization.sql
---   sql/create_table_sql/create_healthcarebrand.sql
---   sql/create_table_sql/create_identifier.sql
---   sql/create_table_sql/create_individual.sql
---   sql/create_table_sql/create_interop_endpoint.sql
---   sql/create_table_sql/create_npi.sql
---   sql/create_table_sql/create_nppes_data.sql
---   sql/create_table_sql/create_payer_data.sql
---   sql/create_table_sql/create_phone.sql
---   sql/create_table_sql/create_provider_taxonomy.sql
---   sql/create_table_sql/create_user_tables.sql
+--   ./sql/create_table_sql/create_address.sql
+--   ./sql/create_table_sql/create_clinical_organization.sql
+--   ./sql/create_table_sql/create_EHR.sql
+--   ./sql/create_table_sql/create_healthcarebrand.sql
+--   ./sql/create_table_sql/create_identifier.sql
+--   ./sql/create_table_sql/create_individual.sql
+--   ./sql/create_table_sql/create_interop_endpoint.sql
+--   ./sql/create_table_sql/create_npi.sql
+--   ./sql/create_table_sql/create_nppes_data.sql
+--   ./sql/create_table_sql/create_payer_data.sql
+--   ./sql/create_table_sql/create_phone.sql
+--   ./sql/create_table_sql/create_provider_taxonomy.sql
+--   ./sql/create_table_sql/create_user_tables.sql
 
-
-CREATE TABLE ndh.EHRToNPI (
-    id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
-    EHR_id int   NOT NULL
-);
-
-CREATE TABLE ndh.EHR (
-    id SERIAL PRIMARY KEY,
-    -- Sourced from CHPL data here https://chpl.healthit.gov/
-    CHPL_ID VARCHAR(200)   NOT NULL,
-    bulk_endpoint_json_url VARCHAR(500) NULL
-);
 
 CREATE TABLE ndh.address (
     id SERIAL PRIMARY KEY,
@@ -189,7 +176,7 @@ CREATE TABLE ndh.NPIAddress (
 
 CREATE TABLE ndh.ClinicalOrganization (
     id SERIAL PRIMARY KEY,
-    org_legal_name VARCHAR(200)   NOT NULL,
+    ClinicalOrganization_legal_name VARCHAR(200)   NOT NULL,
     AuthorizedOfficial_Individual_id INT   NOT NULL,
     ParentOrganization_id INT   NOT NULL,
     OrganizationTIN VARCHAR(10)   NOT NULL,
@@ -213,15 +200,28 @@ CREATE TABLE ndh.ClinicalOrgnameTypeLUT (
     source_file TEXT   NOT NULL,
     source_field TEXT   NOT NULL,
     CONSTRAINT uc_OrgnameTypeLUT_orgname_description UNIQUE (
-        orgname_description
+        orgname_type_description
     )
 );
 
 CREATE TABLE ndh.Orgname (
     id SERIAL PRIMARY KEY,
     ClinicalOrganization_id INT   NOT NULL,
-    organization_name VARCHAR(70)   NOT NULL,
+    ClinicalOrganization_name VARCHAR(70)   NOT NULL,
     ClinicalOrgnameType_id INTEGER   NOT NULL
+);
+
+CREATE TABLE ndh.EHRToNPI (
+    id SERIAL PRIMARY KEY,
+    NPI_id BIGINT   NOT NULL,
+    EHR_id int   NOT NULL
+);
+
+CREATE TABLE ndh.EHR (
+    id SERIAL PRIMARY KEY,
+    -- Sourced from CHPL data here https://chpl.healthit.gov/
+    CHPL_ID VARCHAR(200)   NOT NULL,
+    bulk_endpoint_json_url VARCHAR(500) NULL
 );
 
 CREATE TABLE ndh.HealthcareBrand (
