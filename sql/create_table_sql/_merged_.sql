@@ -1,5 +1,5 @@
 -- Merged CREATE TABLE statements
--- Generated on: 2025-07-02 02:04:07
+-- Generated on: 2025-07-02 02:09:46
 -- Total CREATE TABLE statements: 63
 --
 -- Source files:
@@ -553,7 +553,7 @@ CREATE TABLE ndh.ServiceArea (
     -- marketplace/service-area-puf.StateCode
     StateCode varchar   NOT NULL,
     -- wishlist
-    shape geometry   NOT NULL
+    service_area_shape GEOMETRY(MULTIPOLYGON, 4326)   NOT NULL
 );
 
 CREATE TABLE ndh.PlanNetworkToOrg (
