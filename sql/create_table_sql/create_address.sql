@@ -1,7 +1,7 @@
 -- Create an address table using the Smarty Streets API schema as the basis.
 
 -- Main address table
-CREATE TABLE address (
+CREATE TABLE ndh.address (
     id SERIAL PRIMARY KEY,
     barcode_delivery_code VARCHAR(12),
     smarty_key VARCHAR(10),
