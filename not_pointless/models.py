@@ -2,7 +2,7 @@ import os
 from django.db import models
 
 # Get schema and table names from environment variables with fallbacks
-DB_SCHEMA = os.getenv('DB_SCHEMA', 'not_pointless')
+DB_SCHEMA = os.getenv('DB_SCHEMA', 'ndh')
 DB_TABLE = os.getenv('DB_TABLE', 'Endpoint')
 
 class Endpoint(models.Model):

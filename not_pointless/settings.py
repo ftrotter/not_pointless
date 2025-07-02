@@ -257,7 +257,7 @@ def get_database_config():
     
     # Get schema separately - this is not part of Django's database configuration
     # but we log it for reference
-    db_schema = os.getenv('DB_SCHEMA', 'not_pointless')
+    db_schema = os.getenv('DB_SCHEMA', 'ndh')
     logger.info(f"Using database schema: {db_schema}")
     
     return {
