@@ -2,7 +2,7 @@
 -- normalized version of data from NPPES (National Plan and Provider Enumeration System) 
 -- from https://download.cms.gov/nppes/NPI_Files.html
 -- NPI Core Entity Table
-CREATE TABLE ndh.npidetail (
+CREATE TABLE nppes_normal.npidetail (
     npi BIGINT PRIMARY KEY,
     entity_type_code SMALLINT NOT NULL, -- 1 = individual, 2 = organization
     replacement_npi VARCHAR(11),
@@ -15,8 +15,8 @@ CREATE TABLE ndh.npidetail (
 );
 
 -- Individuals
-CREATE TABLE ndh.npi_individual (
-    npi BIGINT PRIMARY KEY REFERENCES  ndh.npidetail(npi),
+CREATE TABLE nppes_normal.npi_individual (
+    npi BIGINT PRIMARY KEY REFERENCES  nppes_normal.npidetail(npi),
     last_name VARCHAR(36),
     first_name VARCHAR(36),
     middle_name VARCHAR(21),
@@ -28,8 +28,8 @@ CREATE TABLE ndh.npi_individual (
 );
 
 -- Organizations
-CREATE TABLE ndh.npi_organization (
-    npi BIGINT PRIMARY KEY REFERENCES  ndh.npidetail(npi),
+CREATE TABLE nppes_normal.npi_organization (
+    npi BIGINT PRIMARY KEY REFERENCES  nppes_normal.npidetail(npi),
     organization_name VARCHAR(101),
     authorized_official_last_name VARCHAR(36),
     authorized_official_first_name VARCHAR(21),
@@ -45,42 +45,42 @@ CREATE TABLE ndh.npi_organization (
 );
 
 -- identifier type lookup table
-CREATE TABLE ndh.identifier_type_lut (
+CREATE TABLE nppes_normal.identifier_type_lut (
     id SERIAL PRIMARY KEY,
     identifier_type_description TEXT UNIQUE NOT NULL
 );
 
 
 -- Identifiers
-CREATE TABLE ndh.npi_identifier (
+CREATE TABLE nppes_normal.npi_identifier (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     identifier VARCHAR(21),
-    identifier_type_code INTEGER REFERENCES ndh.identifier_type_lut(id),
+    identifier_type_code INTEGER REFERENCES nppes_normal.identifier_type_lut(id),
     state VARCHAR(3),
     issuer VARCHAR(81)
 );
 
 
 -- Lookup: Address Type
-CREATE TABLE ndh.address_type_lut (
+CREATE TABLE nppes_normal.address_type_lut (
     id SERIAL PRIMARY KEY,
     address_type_description TEXT UNIQUE NOT NULL
 );
 
-INSERT INTO ndh.address_type_lut (address_type_description) VALUES
+INSERT INTO nppes_normal.address_type_lut (address_type_description) VALUES
     ('mailing_address_main'),
     ('practice_location_main'),
     ('secondary_practice_location'),
     ('endpoint_address');
 
 -- Lookup: Phone Type
-CREATE TABLE ndh.phone_type_lut (
+CREATE TABLE nppes_normal.phone_type_lut (
     id SERIAL PRIMARY KEY,
     phone_type_description TEXT UNIQUE NOT NULL
 );
 
-INSERT INTO ndh.phone_type_lut (phone_type_description) VALUES
+INSERT INTO nppes_normal.phone_type_lut (phone_type_description) VALUES
     ('main_mailing_phone'),
     ('main_practice_phone'),
     ('secondary_practice_phone'),
@@ -90,21 +90,21 @@ INSERT INTO ndh.phone_type_lut (phone_type_description) VALUES
 
 
 -- Lookup: State Codes
-CREATE TABLE ndh.state_code_lut (
+CREATE TABLE nppes_normal.state_code_lut (
     id SERIAL PRIMARY KEY,
     state_code VARCHAR(100) UNIQUE NOT NULL,
     state_name VARCHAR(100) NOT NULL
 );
 
 -- Lookup: Organization Name Types
-CREATE TABLE ndh.orgname_type_lut (
+CREATE TABLE nppes_normal.orgname_type_lut (
     id SERIAL PRIMARY KEY,
     orgname_description TEXT UNIQUE NOT NULL,
     source_file TEXT NOT NULL,
     source_field TEXT NOT NULL
 );
 
-INSERT INTO ndh.orgname_type_lut (orgname_description, source_file, source_field) VALUES
+INSERT INTO nppes_normal.orgname_type_lut (orgname_description, source_file, source_field) VALUES
     -- From Other Name Reference File
     ('Doing Business As (DBA) Name', 'Other Name Reference File', 'Other Organization Name Type Code'),
     ('Former Legal Business Name', 'Other Name Reference File', 'Other Organization Name Type Code'),
@@ -124,40 +124,40 @@ INSERT INTO ndh.orgname_type_lut (orgname_description, source_file, source_field
     ('Subpart Organization', 'NPPES Core File', 'Is Subpart');
 
 -- Organization Alternate Names
-CREATE TABLE ndh.orgname (
+CREATE TABLE nppes_normal.orgname (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     organization_name VARCHAR(70),
-    orgname_type_code INTEGER REFERENCES ndh.orgname_type_lut(id),
+    orgname_type_code INTEGER REFERENCES nppes_normal.orgname_type_lut(id),
     code_description VARCHAR(100)
 );
 
 -- Addresses
-CREATE TABLE ndh.npi_address (
+CREATE TABLE nppes_normal.npi_address (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     address_type_id INTEGER ,
     line_1 VARCHAR(55),
     line_2 VARCHAR(55),
     city VARCHAR(40),
-    state_id INTEGER REFERENCES ndh.state_code_lut(id),
+    state_id INTEGER REFERENCES nppes_normal.state_code_lut(id),
     postal_code VARCHAR(20),
     country_code VARCHAR(2)
 );
 
 -- Phone Numbers
-CREATE TABLE ndh.npi_phone (
+CREATE TABLE nppes_normal.npi_phone (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     phone_type_id INTEGER ,
     phone_number VARCHAR(20),
     is_fax BOOLEAN
 );
 
 -- Taxonomy Entries
-CREATE TABLE ndh.npi_taxonomy (
+CREATE TABLE nppes_normal.npi_taxonomy (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     taxonomy_code VARCHAR(10),
     license_number VARCHAR(20),
     license_state_id INTEGER ,
@@ -166,18 +166,18 @@ CREATE TABLE ndh.npi_taxonomy (
 );
 
 -- Identifiers
-CREATE TABLE ndh.npi_identifiers (
+CREATE TABLE nppes_normal.npi_identifiers (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  ndh.npidetail(npi),
+    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
     identifier VARCHAR(20),
     type_code VARCHAR(2),
     state_id INTEGER ,
     issuer VARCHAR(80)
 );
 
-CREATE TABLE ndh.npi_endpoints (
+CREATE TABLE nppes_normal.npi_endpoints (
     id SERIAL PRIMARY KEY,
-    npi BIGINT NOT NULL REFERENCES  ndh.npidetail(npi),
+    npi BIGINT NOT NULL REFERENCES  nppes_normal.npidetail(npi),
     endpoint_type TEXT,                             -- E.g., Direct Messaging, FHIR, etc.
     endpoint_type_description TEXT,
     endpoint TEXT,                                  -- The actual URL or address
@@ -191,7 +191,7 @@ CREATE TABLE ndh.npi_endpoints (
     address_line_1 TEXT,
     address_line_2 TEXT,
     city TEXT,
-    state_id INTEGER REFERENCES ndh.state_code_lut(id),
+    state_id INTEGER REFERENCES nppes_normal.state_code_lut(id),
     postal_code TEXT,
     country_code TEXT,
     endpoint_description TEXT,

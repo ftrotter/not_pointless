@@ -25,7 +25,7 @@ CREATE TABLE ndh.EndpointTypeLUT (
 CREATE TABLE ndh.Endpoint (
     id SERIAL PRIMARY KEY,
     -- for now only FHIR and Direct
-    endpoint_url VARCHAR(500)   NOT NULL,
+    fhir_endpoint_url VARCHAR(500)   NOT NULL,
     -- endpoint NPPES file as endpoint_description
     endpoint_name VARCHAR(100)   NOT NULL,
     -- endpoint NPPES file as endpoint_comments

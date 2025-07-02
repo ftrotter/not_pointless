@@ -14,7 +14,7 @@ CREATE TABLE ndh.UserAccessRole (
     NPI_id BIGINT   NOT NULL
 );
 
-CREATE TABLE ndh.Role (
+CREATE TABLE ndh."Role" (
     id SERIAL PRIMARY KEY,
-    Role varchar(100)   NOT NULL
+    "Role" varchar(100)   NOT NULL
 );
