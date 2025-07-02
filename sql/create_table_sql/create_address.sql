@@ -11,7 +11,7 @@ CREATE TABLE ndh.address (
 );
 
 -- US address table
-CREATE TABLE address_us (
+CREATE TABLE ndh.address_us (
     id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
@@ -79,7 +79,7 @@ CREATE TABLE address_us (
 );
 
 -- International address table
-CREATE TABLE address_international (
+CREATE TABLE ndh.address_international (
     id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
@@ -118,7 +118,7 @@ CREATE TABLE address_international (
 );
 
 -- Non-standard address table
-CREATE TABLE address_nonstandard (
+CREATE TABLE ndh.address_nonstandard (
     id SERIAL PRIMARY KEY,
     address_id INT NOT NULL,
     input_id VARCHAR(36),
@@ -137,27 +137,29 @@ CREATE TABLE address_nonstandard (
 );
 
 
-CREATE TABLE "AddressTypeLUT" (
-    "id" SERIAL PRIMARY KEY,
-    "address_type_description" TEXT   NOT NULL,
-    CONSTRAINT "uc_AddressTypeLUT_address_type_description" UNIQUE (
-        "address_type_description"
+CREATE TABLE ndh.AddressTypeLUT (
+    id SERIAL PRIMARY KEY,
+    address_type_description TEXT   NOT NULL,
+    CONSTRAINT uc_AddressTypeLUT_address_type_description UNIQUE (
+        address_type_description
     )
 );
 
 -- We keep this seperate because there are several state-data-not-address data elements we need it for.
-CREATE TABLE "StateCodeLUT" (
-    "id" SERIAL PRIMARY KEY,
-    "state_code" VARCHAR(100)   NOT NULL,
-    "state_name" VARCHAR(100)   NOT NULL,
-    CONSTRAINT "uc_StateCodeLUT_state_code" UNIQUE (
-        "state_code"
+-- Notable, medical licensing is handled on a per state basis 
+CREATE TABLE ndh.StateCodeLUT (
+    id SERIAL PRIMARY KEY,
+    state_code VARCHAR(100)   NOT NULL,
+    state_name VARCHAR(100)   NOT NULL,
+    CONSTRAINT uc_StateCodeLUT_state_code UNIQUE (
+        state_code
     )
 );
 
-CREATE TABLE "NPIAddress" (
-    "id" SERIAL PRIMARY KEY,
-    "NPI_id" BIGINT   NOT NULL,
-    "AddressType_id" INTEGER   NOT NULL,
-    "Address_id" INT   NOT NULL
+
+CREATE TABLE ndh.NPIAddress (
+    id SERIAL PRIMARY KEY,
+    NPI_id BIGINT   NOT NULL,
+    AddressType_id INTEGER   NOT NULL,
+    Address_id INT   NOT NULL
 );
