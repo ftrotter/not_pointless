@@ -1,0 +1,23 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../VEINHasher"
+		},
+		{
+			"path": "../prime_lookback_picker"
+		},
+		{
+			"path": "../plan_scrape"
+		},
+		{
+			"path": "../nppest2"
+		},
+		{
+			"path": "../durc_is_crud"
+		}
+	],
+	"settings": {}
+}

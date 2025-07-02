@@ -1,0 +1,50 @@
+{
+    "input_index": 0,
+    "candidate_index": 0,
+    "delivery_line_1": "901 H St NE",
+    "last_line": "Washington DC 20002-6979",
+    "delivery_point_barcode": "200026979997",
+    "smarty_key": "1795835339",
+    "components": {
+        "primary_number": "901",
+        "street_name": "H",
+        "street_postdirection": "NE",
+        "street_suffix": "St",
+        "city_name": "Washington",
+        "default_city_name": "Washington",
+        "state_abbreviation": "DC",
+        "zipcode": "20002",
+        "plus4_code": "6979",
+        "delivery_point": "99",
+        "delivery_point_check_digit": "7"
+    },
+    "metadata": {
+        "record_type": "H",
+        "zip_type": "Standard",
+        "county_fips": "11001",
+        "county_name": "District of Columbia",
+        "carrier_route": "C001",
+        "congressional_district": "AL",
+        "building_default_indicator": "Y",
+        "rdi": "Residential",
+        "elot_sequence": "0185",
+        "elot_sort": "A",
+        "latitude": 38.899719,
+        "longitude": -76.994179,
+        "coordinate_license": 1,
+        "precision": "Rooftop",
+        "time_zone": "Eastern",
+        "utc_offset": -5,
+        "dst": true
+    },
+    "analysis": {
+        "dpv_match_code": "D",
+        "dpv_footnotes": "AAN1",
+        "dpv_cmra": "N",
+        "dpv_vacant": "N",
+        "dpv_no_stat": "Y",
+        "active": "Y",
+        "footnotes": "H#",
+        "enhanced_match": "postal-match,missing-secondary"
+    }
+}

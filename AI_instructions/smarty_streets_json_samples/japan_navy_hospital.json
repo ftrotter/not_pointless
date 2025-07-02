@@ -1,0 +1,40 @@
+{
+    "address1": "９０１－２２０２",
+    "address2": "沖縄県 宜野湾市 ビル Futenma ６７６",
+    "components": {
+        "administrative_area": "沖縄県",
+        "administrative_area_iso2": "JP-47",
+        "country_iso_3": "JPN",
+        "locality": "宜野湾市",
+        "postal_code": "９０１－２２０２",
+        "postal_code_short": "９０１－２２０２",
+        "premise": "６７６",
+        "premise_number": "６７６",
+        "thoroughfare": "ビル Futenma"
+    },
+    "metadata": {
+        "latitude": 26.289959,
+        "longitude": 127.776481,
+        "geocode_precision": "Locality",
+        "max_geocode_precision": "Premise",
+        "address_format": "postal_code|administrative_area locality thoroughfare premise"
+    },
+    "analysis": {
+        "verification_status": "Partial",
+        "address_precision": "Locality",
+        "max_address_precision": "DeliveryPoint",
+        "changes": {
+            "components": {
+                "administrative_area": "Verified-NoChange",
+                "administrative_area_iso2": "Added",
+                "country_iso_3": "Added",
+                "locality": "Verified-NoChange",
+                "postal_code": "Verified-NoChange",
+                "postal_code_short": "Verified-NoChange",
+                "premise": "Identified-NoChange",
+                "premise_number": "Identified-NoChange",
+                "thoroughfare": "Identified-ContextChange"
+            }
+        }
+    }
+}

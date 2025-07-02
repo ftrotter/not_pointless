@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Pointless - Endpoint List</title>
+</head>
+<body>
+    <h1>Not Pointless - Database Connection Test</h1>
+    
+    <p>Successfully connected to the database!</p>
+    
+    <h2>Distinct URLs ({{ total_count }} found):</h2>
+    
+    {% if urls %}
+        <ul>
+            {% for url in urls %}
+                <li>{{ url|default:"(empty)" }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No URLs found in the database.</p>
+    {% endif %}
+    
+    <h2>Navigation:</h2>
+    <ul>
+        <li><a href="{% url 'homepage' %}">Back to Homepage</a></li>
+        <li><a href="{% url 'health_check' %}">Health Check</a></li>
+        <li><a href="/admin/">Admin Panel</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Not Pointless - Hello World</title>
+</head>
+<body>
+    <h1>Hello World!</h1>
+    
+    <p>Welcome to the Not Pointless Django application.</p>
+    
+    <p>This homepage does not connect to the database, so it should load successfully even if there are database connection issues.</p>
+    
+    <h2>Test Database Connection:</h2>
+    <p><a href="{% url 'endpoint_print' %}">Click here to test database connection and view endpoints</a></p>
+    
+    <h2>Other Links:</h2>
+    <ul>
+        <li><a href="{% url 'health_check' %}">Health Check</a></li>
+        <li><a href="/admin/">Admin Panel</a></li>
+    </ul>
+</body>
+</html>
