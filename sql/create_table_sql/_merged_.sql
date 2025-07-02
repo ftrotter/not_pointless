@@ -1,21 +1,21 @@
 -- Merged CREATE TABLE statements
--- Generated on: 2025-07-02 02:09:46
+-- Generated on: 2025-07-02 03:39:10
 -- Total CREATE TABLE statements: 63
 --
 -- Source files:
---   ./sql/create_table_sql/create_address.sql
---   ./sql/create_table_sql/create_clinical_organization.sql
---   ./sql/create_table_sql/create_EHR.sql
---   ./sql/create_table_sql/create_healthcarebrand.sql
---   ./sql/create_table_sql/create_identifier.sql
---   ./sql/create_table_sql/create_individual.sql
---   ./sql/create_table_sql/create_interop_endpoint.sql
---   ./sql/create_table_sql/create_npi.sql
---   ./sql/create_table_sql/create_nppes_data.sql
---   ./sql/create_table_sql/create_payer_data.sql
---   ./sql/create_table_sql/create_phone.sql
---   ./sql/create_table_sql/create_provider_taxonomy.sql
---   ./sql/create_table_sql/create_user_tables.sql
+--   sql/create_table_sql/create_address.sql
+--   sql/create_table_sql/create_clinical_organization.sql
+--   sql/create_table_sql/create_EHR.sql
+--   sql/create_table_sql/create_healthcarebrand.sql
+--   sql/create_table_sql/create_identifier.sql
+--   sql/create_table_sql/create_individual.sql
+--   sql/create_table_sql/create_interop_endpoint.sql
+--   sql/create_table_sql/create_npi.sql
+--   sql/create_table_sql/create_nppes_data.sql
+--   sql/create_table_sql/create_payer_data.sql
+--   sql/create_table_sql/create_phone.sql
+--   sql/create_table_sql/create_provider_taxonomy.sql
+--   sql/create_table_sql/create_user_tables.sql
 
 
 CREATE TABLE ndh.address (
@@ -169,7 +169,7 @@ CREATE TABLE ndh.StateCodeLUT (
 
 CREATE TABLE ndh.NPIAddress (
     id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     AddressType_id INTEGER   NOT NULL,
     Address_id INT   NOT NULL
 );
@@ -213,7 +213,7 @@ CREATE TABLE ndh.Orgname (
 
 CREATE TABLE ndh.EHRToNPI (
     id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     EHR_id int   NOT NULL
 );
 
@@ -246,7 +246,7 @@ CREATE TABLE ndh.IdentifierTypeLUT (
 
 CREATE TABLE ndh.NPIIdentifier (
     id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     identifier VARCHAR(21)   NOT NULL,
     IdentifierType_id INTEGER   NOT NULL,
     state VARCHAR(3)   NOT NULL,
@@ -313,6 +313,7 @@ CREATE TABLE ndh.OrgToInteropEndpoint (
 );
 
 CREATE TABLE ndh.NPI (
+    id SERIAL PRIMARY KEY,
     npi BIGINT   NOT NULL,
     entity_type_code SMALLINT   NOT NULL,
     replacement_npi VARCHAR(11)   NOT NULL,
@@ -326,7 +327,7 @@ CREATE TABLE ndh.NPI (
 
 CREATE TABLE ndh.NPI_to_Individual (
     id SERIAL PRIMARY KEY,
-    NPI_npi BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     Individual_id INT   NOT NULL,
     is_sole_proprietor BOOLEAN   NOT NULL,
     sex_code CHAR(1)   NOT NULL
@@ -334,13 +335,14 @@ CREATE TABLE ndh.NPI_to_Individual (
 
 CREATE TABLE ndh.NPI_to_ClinicalOrganization (
     id SERIAL PRIMARY KEY,
-    NPI_npi BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     ClinicalOrganization_id INT   NOT NULL,
     PrimaryAuthorizedOfficial_Individual_id INT NOT NULL -- TODO shold this be its own intermediate table? With an is_primary boolean in it?
 );
 
 CREATE TABLE nppes_normal.npidetail (
-    npi BIGINT PRIMARY KEY,
+    id INT PRIMARY KEY,
+    npi BIGINT,
     entity_type_code SMALLINT NOT NULL, -- 1 = individual, 2 = organization
     replacement_npi VARCHAR(11),
     enumeration_date DATE,
@@ -352,7 +354,8 @@ CREATE TABLE nppes_normal.npidetail (
 );
 
 CREATE TABLE nppes_normal.npi_individual (
-    npi BIGINT PRIMARY KEY REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,  
+    npi BIGINT,
     last_name VARCHAR(36),
     first_name VARCHAR(36),
     middle_name VARCHAR(21),
@@ -364,7 +367,8 @@ CREATE TABLE nppes_normal.npi_individual (
 );
 
 CREATE TABLE nppes_normal.npi_organization (
-    npi BIGINT PRIMARY KEY REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,    
+    npi BIGINT,
     organization_name VARCHAR(101),
     authorized_official_last_name VARCHAR(36),
     authorized_official_first_name VARCHAR(21),
@@ -384,9 +388,10 @@ CREATE TABLE nppes_normal.identifier_type_lut (
     identifier_type_description TEXT UNIQUE NOT NULL
 );
 
-CREATE TABLE nppes_normal.npi_identifier (
+CREATE TABLE nppes_normal.npi_identifier (    
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,    
+    npi BIGINT,
     identifier VARCHAR(21),
     identifier_type_code INTEGER REFERENCES nppes_normal.identifier_type_lut(id),
     state VARCHAR(3),
@@ -418,7 +423,8 @@ CREATE TABLE nppes_normal.orgname_type_lut (
 
 CREATE TABLE nppes_normal.orgname (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     organization_name VARCHAR(70),
     orgname_type_code INTEGER REFERENCES nppes_normal.orgname_type_lut(id),
     code_description VARCHAR(100)
@@ -426,7 +432,8 @@ CREATE TABLE nppes_normal.orgname (
 
 CREATE TABLE nppes_normal.npi_address (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     address_type_id INTEGER ,
     line_1 VARCHAR(55),
     line_2 VARCHAR(55),
@@ -438,7 +445,8 @@ CREATE TABLE nppes_normal.npi_address (
 
 CREATE TABLE nppes_normal.npi_phone (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     phone_type_id INTEGER ,
     phone_number VARCHAR(20),
     is_fax BOOLEAN
@@ -446,7 +454,8 @@ CREATE TABLE nppes_normal.npi_phone (
 
 CREATE TABLE nppes_normal.npi_taxonomy (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     taxonomy_code VARCHAR(10),
     license_number VARCHAR(20),
     license_state_id INTEGER ,
@@ -456,7 +465,8 @@ CREATE TABLE nppes_normal.npi_taxonomy (
 
 CREATE TABLE nppes_normal.npi_identifiers (
     id SERIAL PRIMARY KEY,
-    npi BIGINT REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     identifier VARCHAR(20),
     type_code VARCHAR(2),
     state_id INTEGER ,
@@ -465,7 +475,8 @@ CREATE TABLE nppes_normal.npi_identifiers (
 
 CREATE TABLE nppes_normal.npi_endpoints (
     id SERIAL PRIMARY KEY,
-    npi BIGINT NOT NULL REFERENCES  nppes_normal.npidetail(npi),
+    npidetail_id INT,     
+    npi BIGINT,
     endpoint_type TEXT,                             -- E.g., Direct Messaging, FHIR, etc.
     endpoint_type_description TEXT,
     endpoint TEXT,                                  -- The actual URL or address
@@ -551,9 +562,9 @@ CREATE TABLE ndh.ServiceArea (
     -- marketplace/service-area-puf.ServiceAreaName
     ServiceAreaName varchar   NOT NULL,
     -- marketplace/service-area-puf.StateCode
-    StateCode varchar   NOT NULL,
+    StateCode varchar   NOT NULL
     -- wishlist
-    service_area_shape GEOMETRY(MULTIPOLYGON, 4326)   NOT NULL
+    -- , service_area_shape GEOMETRY(MULTIPOLYGON, 4326)   NOT NULL -- enable with PostGIS turned on! 
 );
 
 CREATE TABLE ndh.PlanNetworkToOrg (
@@ -572,7 +583,7 @@ CREATE TABLE ndh.PhoneTypeLUT (
 
 CREATE TABLE ndh.NPIToPhone (
     id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     PhoneType_id INTEGER   NOT NULL,
     PhoneNumber_id INTEGER   NOT NULL,
     PhoneExtension_id INTEGER  NULL,
@@ -614,7 +625,7 @@ CREATE TABLE ndh.NUCCTaxonomyCodePath (
 
 CREATE TABLE ndh.NPITaxonomy (
     id SERIAL PRIMARY KEY,
-    NPI_id BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     NUCCTaxonomyCode_id INT   NOT NULL,
     license_number VARCHAR(20)   NOT NULL,
     StateCode_id INTEGER   NOT NULL,

@@ -68,9 +68,9 @@ CREATE TABLE ndh.ServiceArea (
     -- marketplace/service-area-puf.ServiceAreaName
     ServiceAreaName varchar   NOT NULL,
     -- marketplace/service-area-puf.StateCode
-    StateCode varchar   NOT NULL,
+    StateCode varchar   NOT NULL
     -- wishlist
-    -- service_area_shape GEOMETRY(MULTIPOLYGON, 4326)   NOT NULL -- enable with PostGIS turned on! 
+    -- , service_area_shape GEOMETRY(MULTIPOLYGON, 4326)   NOT NULL -- enable with PostGIS turned on! 
 );
 
 -- PECOS Sourced initially, then UX Maintained

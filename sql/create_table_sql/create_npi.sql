@@ -4,6 +4,7 @@
 
 
 CREATE TABLE ndh.NPI (
+    id SERIAL PRIMARY KEY,
     npi BIGINT   NOT NULL,
     entity_type_code SMALLINT   NOT NULL,
     replacement_npi VARCHAR(11)   NOT NULL,
@@ -17,7 +18,7 @@ CREATE TABLE ndh.NPI (
 
 CREATE TABLE ndh.NPI_to_Individual (
     id SERIAL PRIMARY KEY,
-    NPI_npi BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     Individual_id INT   NOT NULL,
     is_sole_proprietor BOOLEAN   NOT NULL,
     sex_code CHAR(1)   NOT NULL
@@ -25,7 +26,7 @@ CREATE TABLE ndh.NPI_to_Individual (
 
 CREATE TABLE ndh.NPI_to_ClinicalOrganization (
     id SERIAL PRIMARY KEY,
-    NPI_npi BIGINT   NOT NULL,
+    NPI_id INT   NOT NULL,
     ClinicalOrganization_id INT   NOT NULL,
     PrimaryAuthorizedOfficial_Individual_id INT NOT NULL -- TODO shold this be its own intermediate table? With an is_primary boolean in it?
 );
